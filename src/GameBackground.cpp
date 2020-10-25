@@ -40,24 +40,30 @@ bool GameBackground::RequestSpaceOnGrid(
         coordinate_2.second < m_horizontal_grid_size &&
 
         coordinate_3.first >= 0 && coordinate_3.first < m_vertical_grid_size &&
-        coordinate_3.second >= 0 &&
-        coordinate_3.second < m_horizontal_grid_size
+        coordinate_3.second >= 0 && coordinate_3.second < m_horizontal_grid_size
 
     };
 
     bool is_request_successfull{false};
     if (is_every_coordinate_within_bounds) {
         try {
-            bool is_occupied =
-                (m_occupancy_grid.at(coordinate_0.first).at(coordinate_0.second) ||
-                 m_occupancy_grid.at(coordinate_1.first).at(coordinate_1.second) ||
-                 m_occupancy_grid.at(coordinate_2.first).at(coordinate_2.second) ||
-                 m_occupancy_grid.at(coordinate_3.first).at(coordinate_3.second));
+            bool is_occupied = (m_occupancy_grid.at(coordinate_0.first)
+                                    .at(coordinate_0.second) ||
+                                m_occupancy_grid.at(coordinate_1.first)
+                                    .at(coordinate_1.second) ||
+                                m_occupancy_grid.at(coordinate_2.first)
+                                    .at(coordinate_2.second) ||
+                                m_occupancy_grid.at(coordinate_3.first)
+                                    .at(coordinate_3.second));
             if (!is_occupied) {
-                m_occupancy_grid.at(coordinate_0.first).at(coordinate_0.second) = true;
-                m_occupancy_grid.at(coordinate_1.first).at(coordinate_1.second) = true;
-                m_occupancy_grid.at(coordinate_2.first).at(coordinate_2.second) = true;
-                m_occupancy_grid.at(coordinate_3.first).at(coordinate_3.second) = true;
+                m_occupancy_grid.at(coordinate_0.first)
+                    .at(coordinate_0.second) = true;
+                m_occupancy_grid.at(coordinate_1.first)
+                    .at(coordinate_1.second) = true;
+                m_occupancy_grid.at(coordinate_2.first)
+                    .at(coordinate_2.second) = true;
+                m_occupancy_grid.at(coordinate_3.first)
+                    .at(coordinate_3.second) = true;
                 is_request_successfull = true;
             }
         } catch (std::out_of_range const& e) {

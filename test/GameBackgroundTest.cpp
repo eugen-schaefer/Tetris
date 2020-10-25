@@ -3,7 +3,8 @@
 
 class GameBackgroundTest : public ::testing::Test {
    protected:
-    GameBackgroundTest() : game_background(vertical_grid_size, horizontal_grid_size){}
+    GameBackgroundTest()
+        : game_background(vertical_grid_size, horizontal_grid_size) {}
     int horizontal_grid_size{5};
     int vertical_grid_size{10};
     GameBackground game_background;
@@ -37,7 +38,8 @@ TEST_F(GameBackgroundTest, SuccessfullGridOccupancyRequestForTopLeftCorner) {
     EXPECT_TRUE(actual_result);
 }
 
-TEST_F(GameBackgroundTest, SuccessfullGridOccupancyRequestForBottomRightCorner) {
+TEST_F(GameBackgroundTest,
+       SuccessfullGridOccupancyRequestForBottomRightCorner) {
     int m = vertical_grid_size;
     int n = horizontal_grid_size;
     GameBackground::TetrinosCoordinateType quadrupel{
@@ -47,7 +49,7 @@ TEST_F(GameBackgroundTest, SuccessfullGridOccupancyRequestForBottomRightCorner) 
 }
 
 TEST_F(GameBackgroundTest,
-     UnsuccessfullGridOccupancyRequestBecauseOfOutOfLeftBounce) {
+       UnsuccessfullGridOccupancyRequestBecauseOfOutOfLeftBounce) {
     int m = vertical_grid_size;
     int n = horizontal_grid_size;
     GameBackground::TetrinosCoordinateType quadrupel{
@@ -57,7 +59,7 @@ TEST_F(GameBackgroundTest,
 }
 
 TEST_F(GameBackgroundTest,
-     UnsuccessfullGridOccupancyRequestBecauseOfOutOfRightBounce) {
+       UnsuccessfullGridOccupancyRequestBecauseOfOutOfRightBounce) {
     int m = vertical_grid_size;
     int n = horizontal_grid_size;
     GameBackground::TetrinosCoordinateType quadrupel{
@@ -70,7 +72,7 @@ TEST_F(GameBackgroundTest,
 }
 
 TEST_F(GameBackgroundTest,
-     UnsuccessfullGridOccupancyRequestBecauseOfOutOfBottomBounce) {
+       UnsuccessfullGridOccupancyRequestBecauseOfOutOfBottomBounce) {
     int m = vertical_grid_size;
     int n = horizontal_grid_size;
     GameBackground::TetrinosCoordinateType quadrupel{
@@ -83,7 +85,7 @@ TEST_F(GameBackgroundTest,
 }
 
 TEST_F(GameBackgroundTest,
-     UnsuccessfullGridOccupancyRequestBecauseAlreadyOccupied) {
+       UnsuccessfullGridOccupancyRequestBecauseAlreadyOccupied) {
     GameBackground::TetrinosCoordinateType quadrupel{
         {0, 0}, {1, 0}, {1, 1}, {0, 1}};
     bool actual_result = game_background.RequestSpaceOnGrid(quadrupel);
