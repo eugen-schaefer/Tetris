@@ -1,7 +1,5 @@
 #include "GameBackground.h"
 
-#include <iostream>
-
 GameBackground::GameBackground(int vertical_grid_size, int horizontal_grid_size)
     : m_horizontal_grid_size{horizontal_grid_size},
       m_vertical_grid_size{vertical_grid_size} {
@@ -19,57 +17,37 @@ int GameBackground::GetNumberFilledBottomLines() const {
 }
 
 bool GameBackground::RequestSpaceOnGrid(
-    TetrinosCoordinateType requested_coordinates) {
-    auto coordinate_0 = std::get<0>(requested_coordinates);
-    auto coordinate_1 = std::get<1>(requested_coordinates);
-    auto coordinate_2 = std::get<2>(requested_coordinates);
-    auto coordinate_3 = std::get<3>(requested_coordinates);
-
-    bool is_every_coordinate_within_bounds{
-
-        coordinate_0.first >= 0 && coordinate_0.first < m_vertical_grid_size &&
-        coordinate_0.second >= 0 &&
-        coordinate_0.second < m_horizontal_grid_size &&
-
-        coordinate_1.first >= 0 && coordinate_1.first < m_vertical_grid_size &&
-        coordinate_1.second >= 0 &&
-        coordinate_1.second < m_horizontal_grid_size &&
-
-        coordinate_2.first >= 0 && coordinate_2.first < m_vertical_grid_size &&
-        coordinate_2.second >= 0 &&
-        coordinate_2.second < m_horizontal_grid_size &&
-
-        coordinate_3.first >= 0 && coordinate_3.first < m_vertical_grid_size &&
-        coordinate_3.second >= 0 && coordinate_3.second < m_horizontal_grid_size
-
-    };
+    TetrominoPositionType requested_coordinates) {
+    bool is_every_coordinate_within_bounds{true};
+    for (const auto& position : requested_coordinates) {
+        int pos_x{position.first}, pos_y{position.second};
+        if (pos_x < 0 || pos_x >= m_vertical_grid_size || pos_y < 0 ||
+            pos_y >= m_horizontal_grid_size) {
+            is_every_coordinate_within_bounds = false;
+            break;
+        }
+    }
 
     bool is_request_successfull{false};
     if (is_every_coordinate_within_bounds) {
         try {
-            bool is_occupied = (m_occupancy_grid.at(coordinate_0.first)
-                                    .at(coordinate_0.second) ||
-                                m_occupancy_grid.at(coordinate_1.first)
-                                    .at(coordinate_1.second) ||
-                                m_occupancy_grid.at(coordinate_2.first)
-                                    .at(coordinate_2.second) ||
-                                m_occupancy_grid.at(coordinate_3.first)
-                                    .at(coordinate_3.second));
+            bool is_occupied{false};
+            for (const auto& position : requested_coordinates) {
+                int row{position.first}, column{position.second};
+                is_occupied |= m_occupancy_grid.at(row).at(column);
+            }
+
             if (!is_occupied) {
-                m_occupancy_grid.at(coordinate_0.first)
-                    .at(coordinate_0.second) = true;
-                m_occupancy_grid.at(coordinate_1.first)
-                    .at(coordinate_1.second) = true;
-                m_occupancy_grid.at(coordinate_2.first)
-                    .at(coordinate_2.second) = true;
-                m_occupancy_grid.at(coordinate_3.first)
-                    .at(coordinate_3.second) = true;
+                for (const auto& position : requested_coordinates) {
+                    int row{position.first}, column{position.second};
+                    m_occupancy_grid.at(row).at(column) = true;
+                }
                 is_request_successfull = true;
             }
         } catch (std::out_of_range const& e) {
             std::cerr << e.what() << '\n';
         }
     }
-
+    
     return is_request_successfull;
 }

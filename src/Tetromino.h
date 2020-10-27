@@ -4,8 +4,7 @@
 #include <memory>
 #include <utility>
 #include <vector>
-
-#include "GameBackground.h"
+#include "IGameBackground.h"
 
 enum class Direction { left, right, down };
 
@@ -25,14 +24,16 @@ using TetrominoPositionType = std::vector<std::pair<int, int>>;
 
 class Tetromino {
    public:
-    Tetromino(TetrominoPositionType, Color);
+    Tetromino(IGameBackground&, TetrominoPositionType, Color);
     Color getColor();
     TetrominoPositionType getPosition();
-    void moveOneStep(Direction, GameBackground& bg);
+    void setPosition(TetrominoPositionType);
+    void moveOneStep(Direction);
 
    private:
     Color m_color;
     TetrominoPositionType m_position;
+    IGameBackground& m_game_background;
 };
 
 #endif /* TETROMINO_H_ */

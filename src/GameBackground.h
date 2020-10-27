@@ -1,21 +1,19 @@
-#ifndef GAME_BACKGROUND_H
-#define GAME_BACKGROUND_H
+#ifndef GAME_BACKGROUND_H_
+#define GAME_BACKGROUND_H_
 
+#include "IGameBackground.h"
 #include <tuple>
 #include <utility>
 #include <vector>
 
-class GameBackground {
+class GameBackground : public IGameBackground{
    public:
-    using TetrinosCoordinateType =
-        std::tuple<std::pair<int, int>, std::pair<int, int>,
-                   std::pair<int, int>, std::pair<int, int>>;
 
     GameBackground(int, int);
 
-    std::vector<std::vector<bool>> GetOccupancyGrid() const;
-    int GetNumberFilledBottomLines() const;
-    bool RequestSpaceOnGrid(TetrinosCoordinateType);
+    std::vector<std::vector<bool>> GetOccupancyGrid() const override;
+    int GetNumberFilledBottomLines() const override;
+    bool RequestSpaceOnGrid(TetrominoPositionType) override;
 
    private:
     int m_horizontal_grid_size;
@@ -32,4 +30,4 @@ class GameBackground {
     std::vector<std::vector<bool>> m_occupancy_grid{};
 };
 
-#endif /* GAME_BACKGROUND_H */
+#endif /* GAME_BACKGROUND_H_ */
