@@ -21,12 +21,18 @@ This is the capstone project in the [Udacity C++ Nanodegree Program](https://www
 
 ## Basic Build Instructions
 
-tbd
+1. Clone the entire repo using HTTPS:
+   ```git clone https://github.com/eugen-schaefer/Tetris.git```
+2. Make a build directory at the top level of the cloned repo: mkdir build && cd build
+3. Compile: cmake .. && make
+4. Run the resulting executable from the build folder: ./src/TetrisApp
+
+## How to execute tests
+You can run all tests by executing `./test/run_tests.sh` from the repository root.
+You can also execute individual tests:
+1. Follow the build instruction above
+2. From the build folder execute ./test/<testname> where <testname> is the name of the desired test e.g. ./test/TetrominoTest.
 
 ## How to use
-
-tbd
-
-## Project Tasks
 
 tbd

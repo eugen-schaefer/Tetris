@@ -32,6 +32,5 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 add_subdirectory(src)
 add_subdirectory(test)
 
-add_library(My_Func_Lib STATIC src/my_function.cpp)
 add_library(GameBackgroundLib STATIC src/GameBackground.cpp)
 add_library(TetrominoLib STATIC src/Tetromino.cpp)
