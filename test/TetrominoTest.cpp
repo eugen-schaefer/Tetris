@@ -40,7 +40,7 @@ TEST_F(TetrominoTest, MoveToRightPossible) {
         elem.second++;
     }
 
-    ON_CALL(game_background_mock, RequestSpaceOnGrid(current_position))
+    ON_CALL(game_background_mock, RequestSpaceOnGrid(expected_position))
         .WillByDefault(::testing::Return(true));
 
     unit.moveOneStep(Direction::right);
