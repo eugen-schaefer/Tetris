@@ -15,38 +15,32 @@ void Tetromino::setPosition(TetrominoPositionType position) {
 }
 
 void Tetromino::moveOneStep(Direction direction) {
-    TetrominoPositionType position = getPosition();
+    TetrominoPositionType tetromino_position = getPosition();
     switch (direction) {
         case Direction::down:
-            for (auto& pos : position) {  // TODO: come up with besser naming
-                                          // for position/pos
-                ++pos.first;
+            for (auto& square_position : tetromino_position) {
+                ++square_position.first;
             }
-            if (m_game_background.RequestSpaceOnGrid(position)) {
-                setPosition(position);
+            if (m_game_background.RequestSpaceOnGrid(tetromino_position)) {
+                setPosition(tetromino_position);
             }
             break;
         case Direction::left:
-            for (auto& pos : position) {  // TODO: come up with besser naming
-                                          // for position/pos
-                --pos.second;
+            for (auto& square_position : tetromino_position) {
+                --square_position.second;
             }
-            if (m_game_background.RequestSpaceOnGrid(position)) {
-                setPosition(position);
+            if (m_game_background.RequestSpaceOnGrid(tetromino_position)) {
+                setPosition(tetromino_position);
             }
             break;
         case Direction::right:
-            for (auto& pos : position) {  // TODO: come up with besser naming
-                                          // for position/pos
-                ++pos.second;
+            for (auto& square_position : tetromino_position) {
+                ++square_position.second;
             }
-            // bool my_var = m_game_background.RequestSpaceOnGrid(position);
-            if (m_game_background.RequestSpaceOnGrid(position)) {
-                setPosition(position);
+
+            if (m_game_background.RequestSpaceOnGrid(tetromino_position)) {
+                setPosition(tetromino_position);
             }
             break;
-
-            //        default:
-            //           break;
     }
 }
