@@ -17,7 +17,7 @@ class TetrominoTest : public ::testing::Test {
    protected:
     bool const kTargetPositionFree{true};
     bool const kTargetPositionOccupied{false};
-    TetrominoTest() : unit(game_background_mock, init_position, unit_color){};
+    TetrominoTest() : unit{game_background_mock, init_position, unit_color}{};
     TetrominoPositionType init_position{{0, 0}, {0, 1}, {0, 2}, {0, 3}};
 
     Color const unit_color{Color::blue};
@@ -64,14 +64,18 @@ TEST_F(TetrominoTest, Initialization) {
 }
 
 TEST_F(TetrominoTest, GetColorOfTetromino) {
-    Tetromino red_tetromino(game_background_mock, init_position, Color::red);
+    Tetromino red_tetromino{game_background_mock, init_position, Color::red};
     EXPECT_EQ(Color::red, red_tetromino.getColor());
 }
 
 TEST_F(TetrominoTest, Positioning) {
-    TetrominoPositionType target_position{{5, 1}, {5, 2}, {5, 3}, {5, 4}};
-    unit.setPosition(target_position);
-    EXPECT_EQ(target_position, unit.getPosition());
+    TetrominoPositionType start_position{{5, 1}, {5, 2}, {5, 3}, {5, 4}};
+    TetrominoPositionType target_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
+    Tetromino tetromino{game_background_mock, start_position, unit_color};
+    ON_CALL(game_background_mock, RequestSpaceOnGrid(target_position))
+        .WillByDefault(::testing::Return(true));
+    tetromino.moveOneStep(Direction::down);
+    EXPECT_EQ(target_position, tetromino.getPosition());
 }
 
 TEST_F(TetrominoTest, MoveToTheRightPossible) {
