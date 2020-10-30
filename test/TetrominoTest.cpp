@@ -13,11 +13,15 @@ class GameBackgroundMock : public IGameBackground {
                 (TetrominoPositionType requested_coordinates), (override));
 };
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// --------------- Tests for the Tetromino ----------------- //
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
 class TetrominoTest : public ::testing::Test {
    protected:
     bool const kTargetPositionFree{true};
     bool const kTargetPositionOccupied{false};
-    TetrominoTest() : unit{game_background_mock, init_position, unit_color}{};
+    TetrominoTest() : unit{game_background_mock, init_position, unit_color} {};
     TetrominoPositionType init_position{{0, 0}, {0, 1}, {0, 2}, {0, 3}};
 
     Color const unit_color{Color::blue};
@@ -104,4 +108,42 @@ TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfOccupiedTargetRegion) {
         init_position, Direction::left, kTargetPositionOccupied);
     TetrominoPositionType actual_position = unit.getPosition();
     EXPECT_NE(expected_position, actual_position);
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// --------------- Tests for the I-Shape ------------------- //
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+class ShapeITest : public ::testing::Test {
+   protected:
+    bool const kTargetPositionFree{true};
+    bool const kTargetPositionOccupied{false};
+    ShapeITest() : unit{game_background_mock, init_position, unit_color} {};
+    TetrominoPositionType init_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
+
+    Color const unit_color{Color::cyan};
+    ShapeI unit;
+    ::testing::NiceMock<GameBackgroundMock> game_background_mock;
+};
+
+TEST_F(ShapeITest, Initialization) {
+    TetrominoPositionType expected_position{init_position};
+    TetrominoPositionType actual_position = unit.getPosition();
+    Color expected_color{unit_color};
+    Color actual_color = unit.getColor();
+    EXPECT_EQ(expected_color, actual_color);
+    EXPECT_EQ(expected_position, actual_position);
+    EXPECT_EQ(Orientation::north, unit.getOrientation());
+}
+
+TEST_F(ShapeITest, RotateClockwiseOnce) {
+    TetrominoPositionType expected_position{{4, 3}, {5, 3}, {6, 3}, {7, 3}};
+
+    ON_CALL(game_background_mock, RequestSpaceOnGrid(expected_position))
+        .WillByDefault(::testing::Return(true));
+
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::east, unit.getOrientation());
+    EXPECT_EQ(expected_position, unit.getPosition());
 }

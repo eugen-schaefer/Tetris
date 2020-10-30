@@ -48,6 +48,6 @@ bool GameBackground::RequestSpaceOnGrid(
             std::cerr << e.what() << '\n';
         }
     }
-    
+
     return is_request_successfull;
 }

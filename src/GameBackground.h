@@ -1,14 +1,14 @@
 #ifndef GAME_BACKGROUND_H_
 #define GAME_BACKGROUND_H_
 
-#include "IGameBackground.h"
 #include <tuple>
 #include <utility>
 #include <vector>
 
-class GameBackground : public IGameBackground{
-   public:
+#include "IGameBackground.h"
 
+class GameBackground : public IGameBackground {
+   public:
     GameBackground(int, int);
 
     std::vector<std::vector<bool>> GetOccupancyGrid() const override;

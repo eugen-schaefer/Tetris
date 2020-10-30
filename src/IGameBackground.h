@@ -1,11 +1,9 @@
 #ifndef I_GAME_BACKGROUND_H_
 #define I_GAME_BACKGROUND_H_
 
-// #include <tuple>
+#include <iostream>
 #include <utility>
 #include <vector>
-
-#include <iostream>
 
 using TetrominoPositionType = std::vector<std::pair<int, int>>;
 
