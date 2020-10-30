@@ -21,16 +21,16 @@ Tetromino::Tetromino(IGameBackground &game_background,
       m_position{init_position},
       m_color{color} {};
 
-Color Tetromino::getColor() { return m_color; }
+Color Tetromino::GetColor() { return m_color; }
 
-TetrominoPositionType Tetromino::getPosition() { return m_position; }
+TetrominoPositionType Tetromino::GetPosition() { return m_position; }
 
-void Tetromino::setPosition(TetrominoPositionType position) {
+void Tetromino::SetPosition(TetrominoPositionType position) {
     m_position = position;
 }
 
-void Tetromino::moveOneStep(Direction direction) {
-    TetrominoPositionType tetromino_position = getPosition();
+void Tetromino::MoveOneStep(Direction direction) {
+    TetrominoPositionType tetromino_position = GetPosition();
     switch (direction) {
         case Direction::down:
             for (auto &square_position : tetromino_position) {
@@ -49,7 +49,7 @@ void Tetromino::moveOneStep(Direction direction) {
             break;
     }
     if (m_game_background.RequestSpaceOnGrid(tetromino_position)) {
-        setPosition(tetromino_position);
+        SetPosition(tetromino_position);
     }
 }
 
@@ -58,46 +58,46 @@ ShapeI::ShapeI(IGameBackground &game_background,
     : Tetromino{game_background, init_position, color},
       m_orientation{Orientation::north} {}
 
-Orientation ShapeI::getOrientation() { return m_orientation; }
+Orientation ShapeI::GetOrientation() { return m_orientation; }
 
 void ShapeI::Rotate() {
     TetrominoPositionType position_after_rotation{};
     switch (m_orientation) {
         case Orientation::north:
             position_after_rotation =
-                getPosition() + m_delta_positions.at("NorthEast");
+                GetPosition() + m_delta_positions.at("NorthEast");
             if (m_game_background.RequestSpaceOnGrid(position_after_rotation)) {
-                setPosition(position_after_rotation);
+                SetPosition(position_after_rotation);
                 m_orientation = Orientation::east;
             }
             break;
         case Orientation::east:
             position_after_rotation =
-                getPosition() + m_delta_positions.at("EastSouth");
+                GetPosition() + m_delta_positions.at("EastSouth");
             if (m_game_background.RequestSpaceOnGrid(position_after_rotation)) {
-                setPosition(position_after_rotation);
+                SetPosition(position_after_rotation);
                 m_orientation = Orientation::east;
             }
             break;
         case Orientation::south:
             position_after_rotation =
-                getPosition() + m_delta_positions.at("SouthWest");
+                GetPosition() + m_delta_positions.at("SouthWest");
             if (m_game_background.RequestSpaceOnGrid(position_after_rotation)) {
-                setPosition(position_after_rotation);
+                SetPosition(position_after_rotation);
                 m_orientation = Orientation::east;
             }
             break;
         case Orientation::west:
             position_after_rotation =
-                getPosition() + m_delta_positions.at("WestNorth");
+                GetPosition() + m_delta_positions.at("WestNorth");
             if (m_game_background.RequestSpaceOnGrid(position_after_rotation)) {
-                setPosition(position_after_rotation);
+                SetPosition(position_after_rotation);
                 m_orientation = Orientation::east;
             }
             break;
     }
 
     if (m_game_background.RequestSpaceOnGrid(position_after_rotation)) {
-        setPosition(position_after_rotation);
+        SetPosition(position_after_rotation);
     }
 }

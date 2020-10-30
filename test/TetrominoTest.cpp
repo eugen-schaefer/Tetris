@@ -52,7 +52,7 @@ class TetrominoTest : public ::testing::Test {
         ON_CALL(game_background_mock, RequestSpaceOnGrid(expected_position))
             .WillByDefault(::testing::Return(is_free));
 
-        unit.moveOneStep(direction);
+        unit.MoveOneStep(direction);
 
         return expected_position;
     }
@@ -60,16 +60,16 @@ class TetrominoTest : public ::testing::Test {
 
 TEST_F(TetrominoTest, Initialization) {
     TetrominoPositionType expected_position{init_position};
-    TetrominoPositionType actual_position = unit.getPosition();
+    TetrominoPositionType actual_position = unit.GetPosition();
     Color expected_color{unit_color};
-    Color actual_color = unit.getColor();
+    Color actual_color = unit.GetColor();
     EXPECT_EQ(expected_color, actual_color);
     EXPECT_EQ(expected_position, actual_position);
 }
 
 TEST_F(TetrominoTest, GetColorOfTetromino) {
     Tetromino red_tetromino{game_background_mock, init_position, Color::red};
-    EXPECT_EQ(Color::red, red_tetromino.getColor());
+    EXPECT_EQ(Color::red, red_tetromino.GetColor());
 }
 
 TEST_F(TetrominoTest, Positioning) {
@@ -78,35 +78,35 @@ TEST_F(TetrominoTest, Positioning) {
     Tetromino tetromino{game_background_mock, start_position, unit_color};
     ON_CALL(game_background_mock, RequestSpaceOnGrid(target_position))
         .WillByDefault(::testing::Return(true));
-    tetromino.moveOneStep(Direction::down);
-    EXPECT_EQ(target_position, tetromino.getPosition());
+    tetromino.MoveOneStep(Direction::down);
+    EXPECT_EQ(target_position, tetromino.GetPosition());
 }
 
 TEST_F(TetrominoTest, MoveToTheRightPossible) {
     auto expected_position = moveTetrominoIfPossible(
         init_position, Direction::right, kTargetPositionFree);
-    TetrominoPositionType actual_position = unit.getPosition();
+    TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_EQ(expected_position, actual_position);
 }
 
 TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfOccupiedTargetRegion) {
     auto expected_position = moveTetrominoIfPossible(
         init_position, Direction::right, kTargetPositionOccupied);
-    TetrominoPositionType actual_position = unit.getPosition();
+    TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_NE(expected_position, actual_position);
 }
 
 TEST_F(TetrominoTest, MoveToTheLeftPossible) {
     auto expected_position = moveTetrominoIfPossible(
         init_position, Direction::left, kTargetPositionFree);
-    TetrominoPositionType actual_position = unit.getPosition();
+    TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_EQ(expected_position, actual_position);
 }
 
 TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfOccupiedTargetRegion) {
     auto expected_position = moveTetrominoIfPossible(
         init_position, Direction::left, kTargetPositionOccupied);
-    TetrominoPositionType actual_position = unit.getPosition();
+    TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_NE(expected_position, actual_position);
 }
 
@@ -128,12 +128,12 @@ class ShapeITest : public ::testing::Test {
 
 TEST_F(ShapeITest, Initialization) {
     TetrominoPositionType expected_position{init_position};
-    TetrominoPositionType actual_position = unit.getPosition();
+    TetrominoPositionType actual_position = unit.GetPosition();
     Color expected_color{unit_color};
-    Color actual_color = unit.getColor();
+    Color actual_color = unit.GetColor();
     EXPECT_EQ(expected_color, actual_color);
     EXPECT_EQ(expected_position, actual_position);
-    EXPECT_EQ(Orientation::north, unit.getOrientation());
+    EXPECT_EQ(Orientation::north, unit.GetOrientation());
 }
 
 TEST_F(ShapeITest, RotateClockwiseOnce) {
@@ -144,6 +144,6 @@ TEST_F(ShapeITest, RotateClockwiseOnce) {
 
     unit.Rotate();
 
-    EXPECT_EQ(Orientation::east, unit.getOrientation());
-    EXPECT_EQ(expected_position, unit.getPosition());
+    EXPECT_EQ(Orientation::east, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
 }

@@ -34,12 +34,12 @@ class Tetromino {
    public:
     Tetromino() = delete;
     Tetromino(IGameBackground&, TetrominoPositionType, Color);
-    Color getColor();
-    TetrominoPositionType getPosition();
-    void moveOneStep(Direction);
+    Color GetColor();
+    TetrominoPositionType GetPosition();
+    void MoveOneStep(Direction);
 
    protected:
-    void setPosition(TetrominoPositionType);
+    void SetPosition(TetrominoPositionType);
     TetrominoPositionType m_position;
     IGameBackground& m_game_background;
 
@@ -51,7 +51,7 @@ class ShapeI : public Tetromino {
    public:
     ShapeI() = delete;
     ShapeI(IGameBackground&, TetrominoPositionType, Color);
-    Orientation getOrientation();
+    Orientation GetOrientation();
     void Rotate();
 
    private:
