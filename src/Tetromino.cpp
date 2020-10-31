@@ -76,7 +76,7 @@ void ShapeI::Rotate() {
                 GetPosition() + m_delta_positions.at("EastSouth");
             if (m_game_background.RequestSpaceOnGrid(position_after_rotation)) {
                 SetPosition(position_after_rotation);
-                m_orientation = Orientation::east;
+                m_orientation = Orientation::south;
             }
             break;
         case Orientation::south:
@@ -84,7 +84,7 @@ void ShapeI::Rotate() {
                 GetPosition() + m_delta_positions.at("SouthWest");
             if (m_game_background.RequestSpaceOnGrid(position_after_rotation)) {
                 SetPosition(position_after_rotation);
-                m_orientation = Orientation::east;
+                m_orientation = Orientation::west;
             }
             break;
         case Orientation::west:
@@ -92,7 +92,7 @@ void ShapeI::Rotate() {
                 GetPosition() + m_delta_positions.at("WestNorth");
             if (m_game_background.RequestSpaceOnGrid(position_after_rotation)) {
                 SetPosition(position_after_rotation);
-                m_orientation = Orientation::east;
+                m_orientation = Orientation::north;
             }
             break;
     }

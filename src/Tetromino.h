@@ -27,13 +27,13 @@ enum class Orientation { north, east, south, west };
 
 using TetrominoPositionType = std::vector<std::pair<int, int>>;
 
-TetrominoPositionType operator+(const TetrominoPositionType& position1,
-                                const TetrominoPositionType& position2);
+TetrominoPositionType operator+(const TetrominoPositionType &position1,
+                                const TetrominoPositionType &position2);
 
 class Tetromino {
    public:
     Tetromino() = delete;
-    Tetromino(IGameBackground&, TetrominoPositionType, Color);
+    Tetromino(IGameBackground &, TetrominoPositionType, Color);
     Color GetColor();
     TetrominoPositionType GetPosition();
     void MoveOneStep(Direction);
@@ -41,7 +41,7 @@ class Tetromino {
    protected:
     void SetPosition(TetrominoPositionType);
     TetrominoPositionType m_position;
-    IGameBackground& m_game_background;
+    IGameBackground &m_game_background;
 
    private:
     Color m_color;
@@ -50,7 +50,7 @@ class Tetromino {
 class ShapeI : public Tetromino {
    public:
     ShapeI() = delete;
-    ShapeI(IGameBackground&, TetrominoPositionType, Color);
+    ShapeI(IGameBackground &, TetrominoPositionType, Color);
     Orientation GetOrientation();
     void Rotate();
 
@@ -59,7 +59,7 @@ class ShapeI : public Tetromino {
         {"NorthEast", {{-2, 2}, {-1, 1}, {0, 0}, {1, -1}}},
         {"EastSouth", {{2, 1}, {1, 0}, {0, -1}, {-1, -2}}},
         {"SouthWest", {{1, -2}, {0, -1}, {-1, 0}, {-2, 1}}},
-        {"WestNorth", {{0, -3}, {0, -1}, {0, 1}, {0, 3}}}};
+        {"WestNorth", {{-1, -1}, {0, 0}, {1, 1}, {2, 2}}}};
     Orientation m_orientation;
 };
 

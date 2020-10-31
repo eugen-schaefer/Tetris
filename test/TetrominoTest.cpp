@@ -21,6 +21,7 @@ class TetrominoTest : public ::testing::Test {
    protected:
     bool const kTargetPositionFree{true};
     bool const kTargetPositionOccupied{false};
+
     TetrominoTest() : unit{game_background_mock, init_position, unit_color} {};
     TetrominoPositionType init_position{{0, 0}, {0, 1}, {0, 2}, {0, 3}};
 
@@ -33,7 +34,7 @@ class TetrominoTest : public ::testing::Test {
         bool is_free) {
         TetrominoPositionType expected_position{initial_position};
 
-        for (auto& elem : expected_position) {
+        for (auto &elem : expected_position) {
             switch (direction) {
                 case Direction::left:
                     --elem.second;
@@ -118,6 +119,7 @@ class ShapeITest : public ::testing::Test {
    protected:
     bool const kTargetPositionFree{true};
     bool const kTargetPositionOccupied{false};
+
     ShapeITest() : unit{game_background_mock, init_position, unit_color} {};
     TetrominoPositionType init_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
 
@@ -145,5 +147,56 @@ TEST_F(ShapeITest, RotateClockwiseOnce) {
     unit.Rotate();
 
     EXPECT_EQ(Orientation::east, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+TEST_F(ShapeITest, RotateClockwiseTwice) {
+    TetrominoPositionType expected_position{{6, 4}, {6, 3}, {6, 2}, {6, 1}};
+
+    // "::testing::_" means that the mock will always return what has been
+    // specified in the Return statement regardless of the input provided
+    // to the mocked RequestSpaceOnGrid
+    ON_CALL(game_background_mock, RequestSpaceOnGrid(::testing::_))
+        .WillByDefault(::testing::Return(true));
+
+    unit.Rotate();
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::south, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+TEST_F(ShapeITest, RotateClockwiseOnceThreeTimes) {
+    TetrominoPositionType expected_position{{7, 2}, {6, 2}, {5, 2}, {4, 2}};
+
+    // "::testing::_" means that the mock will always return what has been
+    // specified in the Return statement regardless of the input provided
+    // to the mocked RequestSpaceOnGrid
+    ON_CALL(game_background_mock, RequestSpaceOnGrid(::testing::_))
+        .WillByDefault(::testing::Return(true));
+
+    unit.Rotate();
+    unit.Rotate();
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::west, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+TEST_F(ShapeITest, RotateClockwiseOnceFourTimes) {
+    TetrominoPositionType expected_position{init_position};
+
+    // "::testing::_" means that the mock will always return what has been
+    // specified in the Return statement regardless of the input provided
+    // to the mocked RequestSpaceOnGrid
+    ON_CALL(game_background_mock, RequestSpaceOnGrid(::testing::_))
+        .WillByDefault(::testing::Return(true));
+
+    unit.Rotate();
+    unit.Rotate();
+    unit.Rotate();
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::north, unit.GetOrientation());
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
