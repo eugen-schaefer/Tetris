@@ -1,6 +1,12 @@
 #include <iostream>
 
-int main(){
+#include "Game.h"
 
-    std::cout << "Hello world !" << std::endl;
+int main() {
+    sf::RenderWindow window(sf::VideoMode(700, 1000), "Tetris");
+
+    Game game(window);
+    game.start(window);
+
+    return EXIT_SUCCESS;
 }

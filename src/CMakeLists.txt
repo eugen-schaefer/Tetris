@@ -1,3 +1,7 @@
 cmake_minimum_required(VERSION 3.11.3)
+add_library(GameBackgroundLib STATIC GameBackground.cpp)
+add_library(TetrominoLib STATIC Tetromino.cpp)
+add_library(GridGraphicLib STATIC GridGraphic.cpp)
+add_library(GameLib STATIC Game.cpp)
 add_executable(TetrisApp main.cpp)
-target_link_libraries(TetrisApp sfml-graphics sfml-window sfml-system)
+target_link_libraries(TetrisApp sfml-graphics sfml-window sfml-system GridGraphicLib GameLib)
