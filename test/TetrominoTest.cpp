@@ -1,11 +1,11 @@
-#include "../src/IGameBackground.h"
+#include "../src/IGridLogic.h"
 #include "../src/Tetromino.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-class GameBackgroundMock : public IGameBackground {
+class GridLogicMock : public IGridLogic {
    public:
-    GameBackgroundMock() : IGameBackground(){};
+    GridLogicMock() : IGridLogic(){};
     MOCK_METHOD((std::vector<std::vector<bool>>), GetOccupancyGrid, (),
                 (const));
     MOCK_METHOD(int, GetNumberFilledBottomLines, (), (const));
@@ -22,12 +22,12 @@ class TetrominoTest : public ::testing::Test {
     bool const kTargetPositionFree{true};
     bool const kTargetPositionOccupied{false};
 
-    TetrominoTest() : unit{game_background_mock, init_position, unit_color} {};
+    TetrominoTest() : unit{grid_logic_mock, init_position, unit_color} {};
     TetrominoPositionType init_position{{0, 0}, {0, 1}, {0, 2}, {0, 3}};
 
     Color const unit_color{Color::blue};
     Tetromino unit;
-    ::testing::NiceMock<GameBackgroundMock> game_background_mock;
+    ::testing::NiceMock<GridLogicMock> grid_logic_mock;
 
     TetrominoPositionType moveTetrominoIfPossible(
         TetrominoPositionType initial_position, Direction direction,
@@ -50,7 +50,7 @@ class TetrominoTest : public ::testing::Test {
             }
         }
 
-        ON_CALL(game_background_mock, RequestSpaceOnGrid(expected_position))
+        ON_CALL(grid_logic_mock, RequestSpaceOnGrid(expected_position))
             .WillByDefault(::testing::Return(is_free));
 
         unit.MoveOneStep(direction);
@@ -69,15 +69,15 @@ TEST_F(TetrominoTest, Initialization) {
 }
 
 TEST_F(TetrominoTest, GetColorOfTetromino) {
-    Tetromino red_tetromino{game_background_mock, init_position, Color::red};
+    Tetromino red_tetromino{grid_logic_mock, init_position, Color::red};
     EXPECT_EQ(Color::red, red_tetromino.GetColor());
 }
 
 TEST_F(TetrominoTest, Positioning) {
     TetrominoPositionType start_position{{5, 1}, {5, 2}, {5, 3}, {5, 4}};
     TetrominoPositionType target_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
-    Tetromino tetromino{game_background_mock, start_position, unit_color};
-    ON_CALL(game_background_mock, RequestSpaceOnGrid(target_position))
+    Tetromino tetromino{grid_logic_mock, start_position, unit_color};
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(target_position))
         .WillByDefault(::testing::Return(true));
     tetromino.MoveOneStep(Direction::down);
     EXPECT_EQ(target_position, tetromino.GetPosition());
@@ -120,12 +120,12 @@ class ShapeITest : public ::testing::Test {
     bool const kTargetPositionFree{true};
     bool const kTargetPositionOccupied{false};
 
-    ShapeITest() : unit{game_background_mock, init_position, unit_color} {};
+    ShapeITest() : unit{grid_logic_mock, init_position, unit_color} {};
     TetrominoPositionType init_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
 
     Color const unit_color{Color::cyan};
     ShapeI unit;
-    ::testing::NiceMock<GameBackgroundMock> game_background_mock;
+    ::testing::NiceMock<GridLogicMock> grid_logic_mock;
 };
 
 TEST_F(ShapeITest, Initialization) {
@@ -141,7 +141,7 @@ TEST_F(ShapeITest, Initialization) {
 TEST_F(ShapeITest, RotateClockwiseOnce) {
     TetrominoPositionType expected_position{{4, 3}, {5, 3}, {6, 3}, {7, 3}};
 
-    ON_CALL(game_background_mock, RequestSpaceOnGrid(expected_position))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(expected_position))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();
@@ -156,7 +156,7 @@ TEST_F(ShapeITest, RotateClockwiseTwice) {
     // "::testing::_" means that the mock will always return what has been
     // specified in the Return statement regardless of the input provided
     // to the mocked RequestSpaceOnGrid
-    ON_CALL(game_background_mock, RequestSpaceOnGrid(::testing::_))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();
@@ -172,7 +172,7 @@ TEST_F(ShapeITest, RotateClockwiseOnceThreeTimes) {
     // "::testing::_" means that the mock will always return what has been
     // specified in the Return statement regardless of the input provided
     // to the mocked RequestSpaceOnGrid
-    ON_CALL(game_background_mock, RequestSpaceOnGrid(::testing::_))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();
@@ -189,7 +189,7 @@ TEST_F(ShapeITest, RotateClockwiseOnceFourTimes) {
     // "::testing::_" means that the mock will always return what has been
     // specified in the Return statement regardless of the input provided
     // to the mocked RequestSpaceOnGrid
-    ON_CALL(game_background_mock, RequestSpaceOnGrid(::testing::_))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();

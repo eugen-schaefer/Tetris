@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "IGameBackground.h"
+#include "IGridLogic.h"
 
 enum class Direction { left, right, down };
 
@@ -33,7 +33,7 @@ TetrominoPositionType operator+(const TetrominoPositionType &position1,
 class Tetromino {
    public:
     Tetromino() = delete;
-    Tetromino(IGameBackground &, TetrominoPositionType, Color);
+    Tetromino(IGridLogic &, TetrominoPositionType, Color);
     Color GetColor();
     TetrominoPositionType GetPosition();
     void MoveOneStep(Direction);
@@ -41,7 +41,7 @@ class Tetromino {
    protected:
     void SetPosition(TetrominoPositionType);
     TetrominoPositionType m_position;
-    IGameBackground &m_game_background;
+    IGridLogic &m_grid_logic;
 
    private:
     Color m_color;
@@ -50,7 +50,7 @@ class Tetromino {
 class ShapeI : public Tetromino {
    public:
     ShapeI() = delete;
-    ShapeI(IGameBackground &, TetrominoPositionType, Color);
+    ShapeI(IGridLogic &, TetrominoPositionType, Color);
     Orientation GetOrientation();
     void Rotate();
 

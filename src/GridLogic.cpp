@@ -1,6 +1,6 @@
-#include "GameBackground.h"
+#include "GridLogic.h"
 
-GameBackground::GameBackground(int vertical_grid_size, int horizontal_grid_size)
+GridLogic::GridLogic(int vertical_grid_size, int horizontal_grid_size)
     : m_horizontal_grid_size{horizontal_grid_size},
       m_vertical_grid_size{vertical_grid_size} {
     m_occupancy_grid.resize(vertical_grid_size);
@@ -9,14 +9,14 @@ GameBackground::GameBackground(int vertical_grid_size, int horizontal_grid_size)
     }
 }
 
-std::vector<std::vector<bool>> GameBackground::GetOccupancyGrid() const {
+std::vector<std::vector<bool>> GridLogic::GetOccupancyGrid() const {
     return m_occupancy_grid;
 }
-int GameBackground::GetNumberFilledBottomLines() const {
+int GridLogic::GetNumberFilledBottomLines() const {
     return m_nr_buttomlines_filled;
 }
 
-bool GameBackground::RequestSpaceOnGrid(
+bool GridLogic::RequestSpaceOnGrid(
     TetrominoPositionType requested_coordinates) {
     bool is_every_coordinate_within_bounds{true};
     for (const auto& position : requested_coordinates) {

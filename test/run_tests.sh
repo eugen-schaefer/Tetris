@@ -19,10 +19,10 @@ cmake ..
 make
 echo
 echo =======================================
-echo Run GameBackgroundTest ... 
+echo Run GridLogicTest ... 
 echo =======================================
 echo
-./test/GameBackgroundTest
+./test/GridLogicTest
 
 echo
 echo =======================================

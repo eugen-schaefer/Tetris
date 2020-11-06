@@ -1,15 +1,15 @@
-#ifndef GAME_BACKGROUND_H_
-#define GAME_BACKGROUND_H_
+#ifndef GRID_LOGIC_H_
+#define GRID_LOGIC_H_
 
 #include <tuple>
 #include <utility>
 #include <vector>
 
-#include "IGameBackground.h"
+#include "IGridLogic.h"
 
-class GameBackground : public IGameBackground {
+class GridLogic : public IGridLogic {
    public:
-    GameBackground(int, int);
+    GridLogic(int, int);
 
     std::vector<std::vector<bool>> GetOccupancyGrid() const override;
     int GetNumberFilledBottomLines() const override;
@@ -30,4 +30,4 @@ class GameBackground : public IGameBackground {
     std::vector<std::vector<bool>> m_occupancy_grid{};
 };
 
-#endif /* GAME_BACKGROUND_H_ */
+#endif /* GRID_LOGIC_H_ */

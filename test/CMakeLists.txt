@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.11.3)
-add_executable(GameBackgroundTest GameBackgroundTest.cpp)
+add_executable(GridLogicTest GridLogicTest.cpp)
 add_executable(TetrominoTest TetrominoTest.cpp)
-target_link_libraries(GameBackgroundTest gtest_main GameBackgroundLib)
+target_link_libraries(GridLogicTest gtest_main GridLogicLib)
 target_link_libraries(TetrominoTest gmock_main gtest_main TetrominoLib)
