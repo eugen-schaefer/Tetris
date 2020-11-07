@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.11.3)
 add_executable(GridLogicTest GridLogicTest.cpp)
 add_executable(TetrominoTest TetrominoTest.cpp)
+add_executable(GridGraphicTest GridGraphicTest.cpp)
 target_link_libraries(GridLogicTest gtest_main GridLogicLib)
 target_link_libraries(TetrominoTest gmock_main gtest_main TetrominoLib)
+target_link_libraries(GridGraphicTest gmock_main gtest_main sfml-graphics GridGraphicLib)

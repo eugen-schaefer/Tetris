@@ -31,4 +31,10 @@ echo =======================================
 echo
 ./test/TetrominoTest
 
+echo
+echo =======================================
+echo Run GridGraphicTest ... 
+echo =======================================
+echo
+./test/GridGraphicTest
 
