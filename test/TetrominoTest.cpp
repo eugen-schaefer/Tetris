@@ -10,7 +10,9 @@ class GridLogicMock : public IGridLogic {
                 (const));
     MOCK_METHOD(int, GetNumberFilledBottomLines, (), (const));
     MOCK_METHOD(bool, RequestSpaceOnGrid,
-                (TetrominoPositionType requested_coordinates), (override));
+                (TetrominoPositionType current_position,
+                 TetrominoPositionType target_position),
+                (override));
 };
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -30,11 +32,11 @@ class TetrominoTest : public ::testing::Test {
     ::testing::NiceMock<GridLogicMock> grid_logic_mock;
 
     TetrominoPositionType moveTetrominoIfPossible(
-        TetrominoPositionType initial_position, Direction direction,
+        TetrominoPositionType current_position, Direction direction,
         bool is_free) {
-        TetrominoPositionType expected_position{initial_position};
+        TetrominoPositionType target_position{current_position};
 
-        for (auto &elem : expected_position) {
+        for (auto &elem : target_position) {
             switch (direction) {
                 case Direction::left:
                     --elem.second;
@@ -50,12 +52,13 @@ class TetrominoTest : public ::testing::Test {
             }
         }
 
-        ON_CALL(grid_logic_mock, RequestSpaceOnGrid(expected_position))
+        ON_CALL(grid_logic_mock,
+                RequestSpaceOnGrid(current_position, target_position))
             .WillByDefault(::testing::Return(is_free));
 
         unit.MoveOneStep(direction);
 
-        return expected_position;
+        return target_position;
     }
 };
 
@@ -77,7 +80,7 @@ TEST_F(TetrominoTest, Positioning) {
     TetrominoPositionType start_position{{5, 1}, {5, 2}, {5, 3}, {5, 4}};
     TetrominoPositionType target_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
     Tetromino tetromino{grid_logic_mock, start_position, unit_color};
-    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(target_position))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(start_position, target_position))
         .WillByDefault(::testing::Return(true));
     tetromino.MoveOneStep(Direction::down);
     EXPECT_EQ(target_position, tetromino.GetPosition());
@@ -141,7 +144,7 @@ TEST_F(ShapeITest, Initialization) {
 TEST_F(ShapeITest, RotateClockwiseOnce) {
     TetrominoPositionType expected_position{{4, 3}, {5, 3}, {6, 3}, {7, 3}};
 
-    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(expected_position))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();
@@ -156,7 +159,7 @@ TEST_F(ShapeITest, RotateClockwiseTwice) {
     // "::testing::_" means that the mock will always return what has been
     // specified in the Return statement regardless of the input provided
     // to the mocked RequestSpaceOnGrid
-    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_, ::testing::_))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();
@@ -172,7 +175,7 @@ TEST_F(ShapeITest, RotateClockwiseOnceThreeTimes) {
     // "::testing::_" means that the mock will always return what has been
     // specified in the Return statement regardless of the input provided
     // to the mocked RequestSpaceOnGrid
-    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_, ::testing::_))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();
@@ -189,7 +192,7 @@ TEST_F(ShapeITest, RotateClockwiseOnceFourTimes) {
     // "::testing::_" means that the mock will always return what has been
     // specified in the Return statement regardless of the input provided
     // to the mocked RequestSpaceOnGrid
-    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_))
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_, ::testing::_))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();

@@ -17,39 +17,38 @@ TetrominoPositionType operator+(const TetrominoPositionType &position1,
 
 Tetromino::Tetromino(IGridLogic &grid_logic,
                      TetrominoPositionType init_position, Color color)
-    : m_grid_logic{grid_logic},
-      m_position{init_position},
-      m_color{color} {};
+    : m_grid_logic{grid_logic}, m_position{init_position}, m_color{color} {};
 
 Color Tetromino::GetColor() { return m_color; }
 
-TetrominoPositionType Tetromino::GetPosition() { return m_position; }
+TetrominoPositionType Tetromino::GetPosition() const { return m_position; }
 
 void Tetromino::SetPosition(TetrominoPositionType position) {
     m_position = position;
 }
 
 void Tetromino::MoveOneStep(Direction direction) {
-    TetrominoPositionType tetromino_position = GetPosition();
+    TetrominoPositionType current_position{GetPosition()};
+    TetrominoPositionType target_position{current_position};
     switch (direction) {
         case Direction::down:
-            for (auto &square_position : tetromino_position) {
-                ++square_position.first;
+            for (auto &new_square_position : target_position) {
+                ++new_square_position.first;
             }
             break;
         case Direction::left:
-            for (auto &square_position : tetromino_position) {
-                --square_position.second;
+            for (auto &new_square_position : target_position) {
+                --new_square_position.second;
             }
             break;
         case Direction::right:
-            for (auto &square_position : tetromino_position) {
-                ++square_position.second;
+            for (auto &new_square_position : target_position) {
+                ++new_square_position.second;
             }
             break;
     }
-    if (m_grid_logic.RequestSpaceOnGrid(tetromino_position)) {
-        SetPosition(tetromino_position);
+    if (m_grid_logic.RequestSpaceOnGrid(current_position, target_position)) {
+        SetPosition(target_position);
     }
 }
 
@@ -61,43 +60,44 @@ ShapeI::ShapeI(IGridLogic &grid_logic, TetrominoPositionType init_position,
 Orientation ShapeI::GetOrientation() { return m_orientation; }
 
 void ShapeI::Rotate() {
-    TetrominoPositionType position_after_rotation{};
+    TetrominoPositionType current_position{GetPosition()};
+    TetrominoPositionType target_position{};
     switch (m_orientation) {
         case Orientation::north:
-            position_after_rotation =
-                GetPosition() + m_delta_positions.at("NorthEast");
-            if (m_grid_logic.RequestSpaceOnGrid(position_after_rotation)) {
-                SetPosition(position_after_rotation);
+            target_position =
+                current_position + m_delta_positions.at("NorthEast");
+            if (m_grid_logic.RequestSpaceOnGrid(current_position,
+                                                target_position)) {
+                SetPosition(target_position);
                 m_orientation = Orientation::east;
             }
             break;
         case Orientation::east:
-            position_after_rotation =
-                GetPosition() + m_delta_positions.at("EastSouth");
-            if (m_grid_logic.RequestSpaceOnGrid(position_after_rotation)) {
-                SetPosition(position_after_rotation);
+            target_position =
+                current_position + m_delta_positions.at("EastSouth");
+            if (m_grid_logic.RequestSpaceOnGrid(current_position,
+                                                target_position)) {
+                SetPosition(target_position);
                 m_orientation = Orientation::south;
             }
             break;
         case Orientation::south:
-            position_after_rotation =
-                GetPosition() + m_delta_positions.at("SouthWest");
-            if (m_grid_logic.RequestSpaceOnGrid(position_after_rotation)) {
-                SetPosition(position_after_rotation);
+            target_position =
+                current_position + m_delta_positions.at("SouthWest");
+            if (m_grid_logic.RequestSpaceOnGrid(current_position,
+                                                target_position)) {
+                SetPosition(target_position);
                 m_orientation = Orientation::west;
             }
             break;
         case Orientation::west:
-            position_after_rotation =
-                GetPosition() + m_delta_positions.at("WestNorth");
-            if (m_grid_logic.RequestSpaceOnGrid(position_after_rotation)) {
-                SetPosition(position_after_rotation);
+            target_position =
+                current_position + m_delta_positions.at("WestNorth");
+            if (m_grid_logic.RequestSpaceOnGrid(current_position,
+                                                target_position)) {
+                SetPosition(target_position);
                 m_orientation = Orientation::north;
             }
             break;
-    }
-
-    if (m_grid_logic.RequestSpaceOnGrid(position_after_rotation)) {
-        SetPosition(position_after_rotation);
     }
 }

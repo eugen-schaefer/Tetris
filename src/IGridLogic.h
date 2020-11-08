@@ -12,7 +12,8 @@ class IGridLogic {
     virtual ~IGridLogic() = default;
     virtual std::vector<std::vector<bool>> GetOccupancyGrid() const = 0;
     virtual int GetNumberFilledBottomLines() const = 0;
-    virtual bool RequestSpaceOnGrid(TetrominoPositionType) = 0;
+    virtual bool RequestSpaceOnGrid(TetrominoPositionType current_position,
+                                    TetrominoPositionType target_position) = 0;
 };
 
 #endif /* I_GRID_LOGIC_H_ */

@@ -2,7 +2,6 @@
 #define TETROMINO_H_
 
 #include <map>
-#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
@@ -33,9 +32,10 @@ TetrominoPositionType operator+(const TetrominoPositionType &position1,
 class Tetromino {
    public:
     Tetromino() = delete;
-    Tetromino(IGridLogic &, TetrominoPositionType, Color);
+    Tetromino(IGridLogic &grid_logic, TetrominoPositionType init_position,
+              Color color);
     Color GetColor();
-    TetrominoPositionType GetPosition();
+    TetrominoPositionType GetPosition() const;
     void MoveOneStep(Direction);
 
    protected:
@@ -50,7 +50,8 @@ class Tetromino {
 class ShapeI : public Tetromino {
    public:
     ShapeI() = delete;
-    ShapeI(IGridLogic &, TetrominoPositionType, Color);
+    ShapeI(IGridLogic &grid_logic, TetrominoPositionType init_position,
+           Color color);
     Orientation GetOrientation();
     void Rotate();
 
