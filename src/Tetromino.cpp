@@ -17,7 +17,10 @@ TetrominoPositionType operator+(const TetrominoPositionType &position1,
 
 Tetromino::Tetromino(IGridLogic &grid_logic,
                      TetrominoPositionType init_position, Color color)
-    : m_grid_logic{grid_logic}, m_position{init_position}, m_color{color} {};
+    : m_grid_logic{grid_logic},
+      m_position{init_position},
+      m_color{color},
+      m_is_moveable{true} {};
 
 TetrominoPositionType Tetromino::GetPosition() const { return m_position; }
 
@@ -26,6 +29,10 @@ void Tetromino::SetPosition(TetrominoPositionType position) {
 }
 
 void Tetromino::MoveOneStep(Direction direction) {
+    if (!IsMoveable()) {
+        return;
+    }
+
     TetrominoPositionType current_position{GetPosition()};
     TetrominoPositionType target_position{current_position};
     switch (direction) {
@@ -47,6 +54,12 @@ void Tetromino::MoveOneStep(Direction direction) {
     }
     if (m_grid_logic.RequestSpaceOnGrid(current_position, target_position)) {
         SetPosition(target_position);
+    } else if (direction == Direction::down) {
+        // TODO(Eugen): Consider waiting a short period of time (e.g. 1 second)
+        // before locking. This waiting time would allow to horizontally move
+        // the shape at the lowest possible level for the specified amount of
+        // time before is is frozen forever.
+        LockMovement();
     }
 }
 
@@ -59,6 +72,10 @@ ShapeI::ShapeI(IGridLogic &grid_logic)
 Orientation ShapeI::GetOrientation() { return m_orientation; }
 
 void ShapeI::Rotate() {
+    if (!IsMoveable()) {
+        return;
+    }
+
     TetrominoPositionType current_position{GetPosition()};
     TetrominoPositionType target_position{};
     switch (m_orientation) {

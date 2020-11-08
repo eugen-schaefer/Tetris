@@ -19,6 +19,8 @@ class GridLogicMock : public IGridLogic {
 // --------------- Tests for the Tetromino ----------------- //
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
+// TODO(Eugen): Write additiontal tests with the new introduced movement lock
+
 class TetrominoTest : public ::testing::Test {
    protected:
     bool const kTargetPositionFree{true};

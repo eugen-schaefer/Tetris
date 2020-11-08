@@ -37,6 +37,8 @@ class Tetromino {
     Color GetColor() const { return m_color; };
     TetrominoPositionType GetPosition() const;
     void MoveOneStep(Direction);
+    bool IsMoveable() const { return m_is_moveable; };
+    void LockMovement() { m_is_moveable = false; };
 
    protected:
     void SetPosition(TetrominoPositionType);
@@ -45,6 +47,13 @@ class Tetromino {
 
    private:
     Color m_color;
+    // m_is_moveable indicates whether the tetromino can be moved or not. When
+    // the object is instantiated, the m_is_moveable is true and consequently
+    // the tetromino can be moved. Once tetromino has riched the lowest obstacle
+    // (be it the lower grid bound or other tetrominos located already at the
+    // bottom of the grid) m_is_moveable is switched to false and hence the
+    // tetromino can't be moved anymore.
+    bool m_is_moveable;
 };
 
 class ShapeI : public Tetromino {
