@@ -26,11 +26,11 @@ TEST_F(GridGraphicTest, test_positions_of_two_horizontal_cells) {
     int right_cell_column_index{1};
 
     sf::Vector2f left_cell_position_in_window_frame =
-        *grid_graphic.getPositionRelativeToWindow(left_cell_row_index,
+        *grid_graphic.GetPositionRelativeToWindow(left_cell_row_index,
                                                   left_cell_column_index);
 
     sf::Vector2f right_cell_position_in_window_frame =
-        *grid_graphic.getPositionRelativeToWindow(right_cell_row_index,
+        *grid_graphic.GetPositionRelativeToWindow(right_cell_row_index,
                                                   right_cell_column_index);
 
     EXPECT_LT(left_cell_position_in_window_frame.x,
@@ -47,11 +47,11 @@ TEST_F(GridGraphicTest, test_positions_of_two_vertical_cells) {
     int lower_cell_column_index{0};
 
     sf::Vector2f upper_cell_position_in_window_frame =
-        *grid_graphic.getPositionRelativeToWindow(upper_cell_row_index,
+        *grid_graphic.GetPositionRelativeToWindow(upper_cell_row_index,
                                                   upper_cell_column_index);
 
     sf::Vector2f lower_cell_position_in_window_frame =
-        *grid_graphic.getPositionRelativeToWindow(lower_cell_row_index,
+        *grid_graphic.GetPositionRelativeToWindow(lower_cell_row_index,
                                                   lower_cell_column_index);
 
     EXPECT_FLOAT_EQ(upper_cell_position_in_window_frame.x,
@@ -67,7 +67,7 @@ TEST_F(GridGraphicTest,
     int column_index{0};
 
     auto position_in_window_frame =
-        grid_graphic.getPositionRelativeToWindow(row_index, column_index);
+        grid_graphic.GetPositionRelativeToWindow(row_index, column_index);
 
     EXPECT_FALSE(position_in_window_frame);
 }
@@ -78,7 +78,7 @@ TEST_F(GridGraphicTest,
     int column_index{-1};
 
     auto position_in_window_frame =
-        grid_graphic.getPositionRelativeToWindow(row_index, column_index);
+        grid_graphic.GetPositionRelativeToWindow(row_index, column_index);
 
     EXPECT_FALSE(position_in_window_frame);
 }
@@ -89,7 +89,7 @@ TEST_F(GridGraphicTest,
     int column_index{0};
 
     auto position_in_window_frame =
-        grid_graphic.getPositionRelativeToWindow(row_index, column_index);
+        grid_graphic.GetPositionRelativeToWindow(row_index, column_index);
 
     EXPECT_FALSE(position_in_window_frame);
 }
@@ -100,7 +100,7 @@ TEST_F(GridGraphicTest,
     int column_index{static_cast<int>(number_columns)};
 
     auto position_in_window_frame =
-        grid_graphic.getPositionRelativeToWindow(row_index, column_index);
+        grid_graphic.GetPositionRelativeToWindow(row_index, column_index);
 
     EXPECT_FALSE(position_in_window_frame);
 }
