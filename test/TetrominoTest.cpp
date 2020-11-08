@@ -80,7 +80,8 @@ TEST_F(TetrominoTest, Positioning) {
     TetrominoPositionType start_position{{5, 1}, {5, 2}, {5, 3}, {5, 4}};
     TetrominoPositionType target_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
     Tetromino tetromino{grid_logic_mock, start_position, unit_color};
-    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(start_position, target_position))
+    ON_CALL(grid_logic_mock,
+            RequestSpaceOnGrid(start_position, target_position))
         .WillByDefault(::testing::Return(true));
     tetromino.MoveOneStep(Direction::down);
     EXPECT_EQ(target_position, tetromino.GetPosition());
@@ -120,13 +121,19 @@ TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfOccupiedTargetRegion) {
 
 class ShapeITest : public ::testing::Test {
    protected:
-    bool const kTargetPositionFree{true};
-    bool const kTargetPositionOccupied{false};
+    ShapeITest() : unit{grid_logic_mock} {
+        ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_, ::testing::_))
+            .WillByDefault(::testing::Return(true));
+        unit.MoveOneStep(Direction::down);
+        unit.MoveOneStep(Direction::down);
+        unit.MoveOneStep(Direction::down);
+        unit.MoveOneStep(Direction::down);
+        unit.MoveOneStep(Direction::down);
+        unit.MoveOneStep(Direction::down);
+        unit.MoveOneStep(Direction::right);
+    };
 
-    ShapeITest() : unit{grid_logic_mock, init_position, unit_color} {};
     TetrominoPositionType init_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
-
-    Color const unit_color{Color::cyan};
     ShapeI unit;
     ::testing::NiceMock<GridLogicMock> grid_logic_mock;
 };
@@ -134,7 +141,7 @@ class ShapeITest : public ::testing::Test {
 TEST_F(ShapeITest, Initialization) {
     TetrominoPositionType expected_position{init_position};
     TetrominoPositionType actual_position = unit.GetPosition();
-    Color expected_color{unit_color};
+    Color expected_color{Color::cyan};
     Color actual_color = unit.GetColor();
     EXPECT_EQ(expected_color, actual_color);
     EXPECT_EQ(expected_position, actual_position);
@@ -144,7 +151,8 @@ TEST_F(ShapeITest, Initialization) {
 TEST_F(ShapeITest, RotateClockwiseOnce) {
     TetrominoPositionType expected_position{{4, 3}, {5, 3}, {6, 3}, {7, 3}};
 
-    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(init_position, expected_position))
+    ON_CALL(grid_logic_mock,
+            RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
     unit.Rotate();

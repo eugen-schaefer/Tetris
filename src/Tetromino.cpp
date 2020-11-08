@@ -19,8 +19,6 @@ Tetromino::Tetromino(IGridLogic &grid_logic,
                      TetrominoPositionType init_position, Color color)
     : m_grid_logic{grid_logic}, m_position{init_position}, m_color{color} {};
 
-Color Tetromino::GetColor() { return m_color; }
-
 TetrominoPositionType Tetromino::GetPosition() const { return m_position; }
 
 void Tetromino::SetPosition(TetrominoPositionType position) {
@@ -52,10 +50,11 @@ void Tetromino::MoveOneStep(Direction direction) {
     }
 }
 
-ShapeI::ShapeI(IGridLogic &grid_logic, TetrominoPositionType init_position,
-               Color color)
-    : Tetromino{grid_logic, init_position, color},
-      m_orientation{Orientation::north} {}
+// Create I-shape such that it has its initial position in the upper left
+// corner, its orientation is horizontal and its color is cyan.
+ShapeI::ShapeI(IGridLogic &grid_logic)
+    : m_orientation{Orientation::north},
+      Tetromino{grid_logic, {{0, 0}, {0, 1}, {0, 2}, {0, 3}}, Color::cyan} {}
 
 Orientation ShapeI::GetOrientation() { return m_orientation; }
 

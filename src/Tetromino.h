@@ -34,7 +34,7 @@ class Tetromino {
     Tetromino() = delete;
     Tetromino(IGridLogic &grid_logic, TetrominoPositionType init_position,
               Color color);
-    Color GetColor();
+    Color GetColor() const { return m_color; };
     TetrominoPositionType GetPosition() const;
     void MoveOneStep(Direction);
 
@@ -50,8 +50,7 @@ class Tetromino {
 class ShapeI : public Tetromino {
    public:
     ShapeI() = delete;
-    ShapeI(IGridLogic &grid_logic, TetrominoPositionType init_position,
-           Color color);
+    ShapeI(IGridLogic &grid_logic);
     Orientation GetOrientation();
     void Rotate();
 
