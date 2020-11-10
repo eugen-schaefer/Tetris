@@ -34,7 +34,7 @@ TEST_F(GridLogicTest, ZeroFilledButtomLinesAtInstantiation) {
 TEST_F(GridLogicTest, SuccessfullGridOccupancyRequestForTopLeftCorner) {
     // place a square-shape in the upper left corner
     TetrominoPositionType current_position{{0, 0}, {1, 0}, {1, 1}, {0, 1}};
-    TetrominoPositionType target_position{current_position};
+    const TetrominoPositionType& target_position{current_position};
 
     bool actual_result =
         grid_logic.RequestSpaceOnGrid(current_position, target_position);
@@ -48,7 +48,7 @@ TEST_F(GridLogicTest, SuccessfullGridOccupancyRequestForBottomRightCorner) {
         {number_rows - 1, number_columns - 2},
         {number_rows - 1, number_columns - 1},
         {number_rows - 2, number_columns - 1}};
-    TetrominoPositionType target_position{current_position};
+    const TetrominoPositionType& target_position{current_position};
 
     bool actual_result =
         grid_logic.RequestSpaceOnGrid(current_position, target_position);
@@ -118,7 +118,7 @@ TEST_F(GridLogicTest,
 TEST_F(GridLogicTest, UnsuccessfullGridOccupancyRequestBecauseAlreadyOccupied) {
     // place a square-shape in the upper left corner
     TetrominoPositionType current_position{{0, 0}, {1, 0}, {1, 1}, {0, 1}};
-    TetrominoPositionType target_position{current_position};
+    const TetrominoPositionType& target_position{current_position};
     bool actual_result =
         grid_logic.RequestSpaceOnGrid(current_position, target_position);
     EXPECT_TRUE(actual_result);

@@ -20,16 +20,10 @@ Tetromino::Tetromino(IGridLogic &grid_logic,
     : m_grid_logic{grid_logic},
       m_position{init_position},
       m_color{color},
-      m_is_moveable{true} {};
-
-TetrominoPositionType Tetromino::GetPosition() const { return m_position; }
-
-void Tetromino::SetPosition(TetrominoPositionType position) {
-    m_position = position;
-}
+      m_is_movable{true} {};
 
 void Tetromino::MoveOneStep(Direction direction) {
-    if (!IsMoveable()) {
+    if (!IsMovable()) {
         return;
     }
 
@@ -59,7 +53,7 @@ void Tetromino::MoveOneStep(Direction direction) {
         // before locking. This waiting time would allow to horizontally move
         // the shape at the lowest possible level for the specified amount of
         // time before is is frozen forever.
-        LockMovement();
+        MakeUnmovable();
     }
 }
 
@@ -72,7 +66,7 @@ ShapeI::ShapeI(IGridLogic &grid_logic)
 Orientation ShapeI::GetOrientation() { return m_orientation; }
 
 void ShapeI::Rotate() {
-    if (!IsMoveable()) {
+    if (!IsMovable()) {
         return;
     }
 

@@ -34,7 +34,7 @@ class TetrominoTest : public ::testing::Test {
     ::testing::NiceMock<GridLogicMock> grid_logic_mock;
 
     TetrominoPositionType moveTetrominoIfPossible(
-        TetrominoPositionType current_position, Direction direction,
+        const TetrominoPositionType& current_position, Direction direction,
         bool is_free) {
         TetrominoPositionType target_position{current_position};
 

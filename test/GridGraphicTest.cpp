@@ -1,7 +1,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "../src/GridGraphic.h"
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
 class GridGraphicTest : public ::testing::Test {

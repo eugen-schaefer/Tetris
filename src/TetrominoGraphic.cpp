@@ -1,12 +1,14 @@
 #include "TetrominoGraphic.h"
 
-TetrominoGraphic::TetrominoGraphic(const Tetromino& shape,
+#include "GridLogic.h"
+
+TetrominoGraphic::TetrominoGraphic(std::unique_ptr<Tetromino> shape,
                                    const GridGraphic& grid_graphic)
-    : m_shape{shape}, m_grid_graphic{grid_graphic} {
-    auto tetromino_position = shape.GetPosition();
+    : m_shape{std::move(shape)}, m_grid_graphic{grid_graphic} {
     sf::Color tetromino_color{sf::Color::Black};
 
-    switch (shape.GetColor()) {
+    // map shape-color to sf-color
+    switch (m_shape->GetColor()) {
         case Color::blue:
             tetromino_color = sf::Color::Blue;
             break;
@@ -32,17 +34,30 @@ TetrominoGraphic::TetrominoGraphic(const Tetromino& shape,
             break;
     }
 
+    // instantiate 4 squares representing the tetromino shape on the GridGraphic
+    // with init values like position at x=0, y=0
     for (int index{0}; index < m_squares.size(); ++index) {
         m_squares.at(index) = sf::RectangleShape(
             sf::Vector2f(grid_graphic.GetGridCellSideLength(),
                          grid_graphic.GetGridCellSideLength()));
         m_squares.at(index).setFillColor(tetromino_color);
     }
+
+    UpdatePosition();
+}
+
+void TetrominoGraphic::MoveOneStep(Direction direction) {
+    m_shape->MoveOneStep(direction);
+    UpdatePosition();
+}
+
+void TetrominoGraphic::Rotate() {
+    m_shape->Rotate();
     UpdatePosition();
 }
 
 void TetrominoGraphic::UpdatePosition() {
-    auto tetromino_position = m_shape.GetPosition();
+    auto tetromino_position = m_shape->GetPosition();
     for (int index{0}; index < m_squares.size(); ++index) {
         int rowindex_in_grid = tetromino_position.at(index).first;
         int columnindex_in_grid = tetromino_position.at(index).second;

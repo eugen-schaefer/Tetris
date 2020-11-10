@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "GridGraphic.h"
+#include "PlayGround.h"
 
 class Game {
    public:
@@ -12,6 +13,7 @@ class Game {
 
    private:
     GridGraphic m_grid;
+    PlayGround m_play_ground;
 };
 
 #endif /* GAME_H_ */
