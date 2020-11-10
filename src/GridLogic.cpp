@@ -12,8 +12,8 @@ std::vector<std::vector<bool>> GridLogic::GetOccupancyGrid() const {
     return m_occupancy_grid;
 }
 
-int GridLogic::GetNumberFilledBottomLines() const {
-    return m_nr_buttomlines_filled;
+std::vector<int> GridLogic::GetIndexesOfFullyOccupiedRows() const {
+    return m_indexes_of_fully_occupied_rows;
 }
 
 bool GridLogic::RequestSpaceOnGrid(TetrominoPositionType current_position,
@@ -84,6 +84,22 @@ bool GridLogic::RequestSpaceOnGrid(TetrominoPositionType current_position,
                     int target_cell_column{target_cell.second};
                     m_occupancy_grid.at(target_cell_row)
                         .at(target_cell_column) = true;
+                }
+
+                // put indexes of fully occupied rows in grid
+                // from bottom to top into m_indexes_of_fully_occupied_rows
+                int row_idx{m_number_rows - 1};
+                m_indexes_of_fully_occupied_rows.clear();
+                for (auto it = m_occupancy_grid.rbegin();
+                     it != m_occupancy_grid.rend(); ++it) {
+                    bool is_entire_row_occupied{true};
+                    for (const bool is_cell_occupied : (*it)) {
+                        is_entire_row_occupied &= is_cell_occupied;
+                    }
+                    if (is_entire_row_occupied) {
+                        m_indexes_of_fully_occupied_rows.push_back(row_idx);
+                    }
+                    --row_idx;
                 }
 
                 is_request_successfull = true;

@@ -11,8 +11,8 @@ class GridLogic : public IGridLogic {
    public:
     GridLogic(int, int);
 
-    std::vector<std::vector<bool>> GetOccupancyGrid() const override;
-    int GetNumberFilledBottomLines() const override;
+    std::vector<std::vector<bool>> GetOccupancyGrid() const;
+    std::vector<int> GetIndexesOfFullyOccupiedRows() const;
     bool RequestSpaceOnGrid(TetrominoPositionType current_position,
                             TetrominoPositionType target_position) override;
 
@@ -20,6 +20,7 @@ class GridLogic : public IGridLogic {
     int m_number_columns;
     int m_number_rows;
     int m_nr_buttomlines_filled{};
+    std::vector<int> m_indexes_of_fully_occupied_rows;
 
     // The grid is rectangular, i.e. it consists of m x n cells, where m is the
     // number of rows and n is the number of columns. Each grid cell is clearly

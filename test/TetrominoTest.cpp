@@ -6,9 +6,6 @@
 class GridLogicMock : public IGridLogic {
    public:
     GridLogicMock() : IGridLogic(){};
-    MOCK_METHOD((std::vector<std::vector<bool>>), GetOccupancyGrid, (),
-                (const));
-    MOCK_METHOD(int, GetNumberFilledBottomLines, (), (const));
     MOCK_METHOD(bool, RequestSpaceOnGrid,
                 (TetrominoPositionType current_position,
                  TetrominoPositionType target_position),
@@ -33,12 +30,12 @@ class TetrominoTest : public ::testing::Test {
     Tetromino unit;
     ::testing::NiceMock<GridLogicMock> grid_logic_mock;
 
-    TetrominoPositionType moveTetrominoIfPossible(
+    TetrominoPositionType MoveTetrominoIfPossible(
         const TetrominoPositionType& current_position, Direction direction,
         bool is_free) {
         TetrominoPositionType target_position{current_position};
 
-        for (auto &elem : target_position) {
+        for (auto& elem : target_position) {
             switch (direction) {
                 case Direction::left:
                     --elem.second;
@@ -90,28 +87,28 @@ TEST_F(TetrominoTest, Positioning) {
 }
 
 TEST_F(TetrominoTest, MoveToTheRightPossible) {
-    auto expected_position = moveTetrominoIfPossible(
+    auto expected_position = MoveTetrominoIfPossible(
         init_position, Direction::right, kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_EQ(expected_position, actual_position);
 }
 
 TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfOccupiedTargetRegion) {
-    auto expected_position = moveTetrominoIfPossible(
+    auto expected_position = MoveTetrominoIfPossible(
         init_position, Direction::right, kTargetPositionOccupied);
     TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_NE(expected_position, actual_position);
 }
 
 TEST_F(TetrominoTest, MoveToTheLeftPossible) {
-    auto expected_position = moveTetrominoIfPossible(
+    auto expected_position = MoveTetrominoIfPossible(
         init_position, Direction::left, kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_EQ(expected_position, actual_position);
 }
 
 TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfOccupiedTargetRegion) {
-    auto expected_position = moveTetrominoIfPossible(
+    auto expected_position = MoveTetrominoIfPossible(
         init_position, Direction::left, kTargetPositionOccupied);
     TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_NE(expected_position, actual_position);

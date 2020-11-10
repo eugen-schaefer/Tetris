@@ -10,8 +10,6 @@ using TetrominoPositionType = std::vector<std::pair<int, int>>;
 class IGridLogic {
    public:
     virtual ~IGridLogic() = default;
-    virtual std::vector<std::vector<bool>> GetOccupancyGrid() const = 0;
-    virtual int GetNumberFilledBottomLines() const = 0;
     virtual bool RequestSpaceOnGrid(TetrominoPositionType current_position,
                                     TetrominoPositionType target_position) = 0;
 };
