@@ -16,8 +16,6 @@ class GridLogicMock : public IGridLogic {
 // --------------- Tests for the Tetromino ----------------- //
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
 
-// TODO(Eugen): Write additiontal tests with the new introduced movement lock
-
 class TetrominoTest : public ::testing::Test {
    protected:
     bool const kTargetPositionFree{true};
@@ -34,6 +32,10 @@ class TetrominoTest : public ::testing::Test {
         const TetrominoPositionType& current_position, Direction direction,
         bool is_free) {
         TetrominoPositionType target_position{current_position};
+
+        if (!unit.IsMovable()) {
+            return target_position;
+        }
 
         for (auto& elem : target_position) {
             switch (direction) {
@@ -75,17 +77,6 @@ TEST_F(TetrominoTest, GetColorOfTetromino) {
     EXPECT_EQ(Color::red, red_tetromino.GetColor());
 }
 
-TEST_F(TetrominoTest, Positioning) {
-    TetrominoPositionType start_position{{5, 1}, {5, 2}, {5, 3}, {5, 4}};
-    TetrominoPositionType target_position{{6, 1}, {6, 2}, {6, 3}, {6, 4}};
-    Tetromino tetromino{grid_logic_mock, start_position, unit_color};
-    ON_CALL(grid_logic_mock,
-            RequestSpaceOnGrid(start_position, target_position))
-        .WillByDefault(::testing::Return(true));
-    tetromino.MoveOneStep(Direction::down);
-    EXPECT_EQ(target_position, tetromino.GetPosition());
-}
-
 TEST_F(TetrominoTest, MoveToTheRightPossible) {
     auto expected_position = MoveTetrominoIfPossible(
         init_position, Direction::right, kTargetPositionFree);
@@ -100,6 +91,13 @@ TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfOccupiedTargetRegion) {
     EXPECT_NE(expected_position, actual_position);
 }
 
+TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfMovabilityFreeze) {
+    unit.MakeUnmovable();
+    auto expected_position = MoveTetrominoIfPossible(
+        init_position, Direction::right, kTargetPositionFree);
+    EXPECT_EQ(expected_position, init_position);
+}
+
 TEST_F(TetrominoTest, MoveToTheLeftPossible) {
     auto expected_position = MoveTetrominoIfPossible(
         init_position, Direction::left, kTargetPositionFree);
@@ -112,6 +110,70 @@ TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfOccupiedTargetRegion) {
         init_position, Direction::left, kTargetPositionOccupied);
     TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_NE(expected_position, actual_position);
+}
+
+TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfMovabilityFreeze) {
+    unit.MakeUnmovable();
+    auto expected_position = MoveTetrominoIfPossible(
+        init_position, Direction::left, kTargetPositionFree);
+    EXPECT_EQ(expected_position, init_position);
+}
+
+TEST_F(TetrominoTest, MoveDownPossible) {
+    auto expected_position = MoveTetrominoIfPossible(
+        init_position, Direction::down, kTargetPositionFree);
+    TetrominoPositionType actual_position = unit.GetPosition();
+    EXPECT_EQ(expected_position, actual_position);
+}
+
+TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfOccupiedTargetRegion) {
+    auto expected_position = MoveTetrominoIfPossible(
+        init_position, Direction::down, kTargetPositionOccupied);
+    TetrominoPositionType actual_position = unit.GetPosition();
+    EXPECT_NE(expected_position, actual_position);
+}
+
+TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfMovabilityFreeze) {
+    unit.MakeUnmovable();
+    auto expected_position = MoveTetrominoIfPossible(
+        init_position, Direction::down, kTargetPositionFree);
+    EXPECT_EQ(expected_position, init_position);
+}
+
+TEST_F(TetrominoTest, DeleteFirstSquareElement) {
+    const int kIndexZero{0};
+    // init position ==>  {{0, 0}, {0, 1}, {0, 2}, {0, 3}};
+    TetrominoPositionType expected_pos_after_deletion{{0, 1}, {0, 2}, {0, 3}};
+    unit.DeleteTetrominoSquare(kIndexZero);
+    TetrominoPositionType actual_position_after_deletion = unit.GetPosition();
+    EXPECT_EQ(actual_position_after_deletion, actual_position_after_deletion);
+}
+
+TEST_F(TetrominoTest, DeleteSecondSquareElement) {
+    const int kIndexOne{1};
+    // init position ==>  {{0, 0}, {0, 1}, {0, 2}, {0, 3}};
+    TetrominoPositionType expected_pos_after_deletion{{0, 0}, {0, 2}, {0, 3}};
+    unit.DeleteTetrominoSquare(kIndexOne);
+    TetrominoPositionType actual_position_after_deletion = unit.GetPosition();
+    EXPECT_EQ(actual_position_after_deletion, actual_position_after_deletion);
+}
+
+TEST_F(TetrominoTest, DeleteThirdSquareElement) {
+    const int kIndexTwo{2};
+    // init position ==>  {{0, 0}, {0, 1}, {0, 2}, {0, 3}};
+    TetrominoPositionType expected_pos_after_deletion{{0, 0}, {0, 1}, {0, 3}};
+    unit.DeleteTetrominoSquare(kIndexTwo);
+    TetrominoPositionType actual_position_after_deletion = unit.GetPosition();
+    EXPECT_EQ(actual_position_after_deletion, actual_position_after_deletion);
+}
+
+TEST_F(TetrominoTest, DeleteForthSquareElement) {
+    const int kIndexTwo{3};
+    // init position ==>  {{0, 0}, {0, 1}, {0, 2}, {0, 3}};
+    TetrominoPositionType expected_pos_after_deletion{{0, 0}, {0, 1}, {0, 2}};
+    unit.DeleteTetrominoSquare(kIndexTwo);
+    TetrominoPositionType actual_position_after_deletion = unit.GetPosition();
+    EXPECT_EQ(actual_position_after_deletion, actual_position_after_deletion);
 }
 
 // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
@@ -157,6 +219,20 @@ TEST_F(ShapeITest, RotateClockwiseOnce) {
     unit.Rotate();
 
     EXPECT_EQ(Orientation::east, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+TEST_F(ShapeITest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+    TetrominoPositionType expected_position{init_position};
+
+    ON_CALL(grid_logic_mock,
+            RequestSpaceOnGrid(init_position, expected_position))
+        .WillByDefault(::testing::Return(true));
+
+    unit.MakeUnmovable();
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::north, unit.GetOrientation());
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
 

@@ -39,7 +39,8 @@ class Tetromino {
     virtual void MoveOneStep(Direction);
     virtual bool IsMovable() const { return m_is_movable; }
     virtual void MakeUnmovable() { m_is_movable = false; };
-    virtual void Rotate(){}
+    virtual void Rotate() {}
+    virtual void DeleteTetrominoSquare(int index);
 
    protected:
     void SetPosition(TetrominoPositionType position) { m_position = position; }
@@ -61,7 +62,7 @@ class ShapeI : public Tetromino {
    public:
     ShapeI() = delete;
     ShapeI(IGridLogic &grid_logic);
-    Orientation GetOrientation();
+    Orientation GetOrientation() { return m_orientation; }
     void Rotate() override;
 
    private:

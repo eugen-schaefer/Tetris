@@ -57,13 +57,15 @@ void Tetromino::MoveOneStep(Direction direction) {
     }
 }
 
+void Tetromino::DeleteTetrominoSquare(int index) {
+    m_position.erase(m_position.begin() + index);
+}
+
 // Create I-shape such that it has its initial position in the upper left
 // corner, its orientation is horizontal and its color is cyan.
 ShapeI::ShapeI(IGridLogic &grid_logic)
     : m_orientation{Orientation::north},
       Tetromino{grid_logic, {{0, 0}, {0, 1}, {0, 2}, {0, 3}}, Color::cyan} {}
-
-Orientation ShapeI::GetOrientation() { return m_orientation; }
 
 void ShapeI::Rotate() {
     if (!IsMovable()) {
