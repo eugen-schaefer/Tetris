@@ -34,13 +34,13 @@ TetrominoGraphic::TetrominoGraphic(std::unique_ptr<Tetromino> shape,
             break;
     }
 
-    // instantiate 4 squares representing the tetromino shape on the GridGraphic
-    // with init values like position at x=0, y=0
-    for (int index{0}; index < m_squares.size(); ++index) {
-        m_squares.at(index) = sf::RectangleShape(
+    // instantiate rectangles representing the tetromino shape on the
+    // GridGraphic with init values like position at x=0, y=0
+    for (int index{0}; index < m_shape->GetPosition().size(); ++index) {
+        m_squares.emplace_back(
             sf::Vector2f(grid_graphic.GetGridCellSideLength(),
                          grid_graphic.GetGridCellSideLength()));
-        m_squares.at(index).setFillColor(tetromino_color);
+        m_squares.back().setFillColor(tetromino_color);
     }
 
     UpdatePosition();
@@ -66,6 +66,15 @@ void TetrominoGraphic::UpdatePosition() {
                                                         columnindex_in_grid);
         m_squares.at(index).setPosition(relative_position);
     }
+}
+
+void TetrominoGraphic::DeleteTetrominoSquare(int index) {
+    m_shape->DeleteTetrominoSquare(index);
+    m_squares.erase(m_squares.begin() + index);
+}
+
+TetrominoPositionType TetrominoGraphic::GetPositionRelativeToLogicalGrid() {
+    return m_shape->GetPosition();
 }
 
 void TetrominoGraphic::draw(sf::RenderTarget& target,
