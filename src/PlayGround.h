@@ -19,7 +19,7 @@ class PlayGround : public sf::Drawable {
     GridLogic m_grid_logic;
     GridGraphic m_grid_graphic;
     std::deque<std::unique_ptr<TetrominoGraphic>> m_shapes_in_queue;
-    std::vector<std::unique_ptr<TetrominoGraphic>> m_shapes_on_grid;
+    std::vector<std::unique_ptr<TetrominoGraphic>> m_frozen_shapes_on_grid;
     std::unique_ptr<TetrominoGraphic> m_active_shape;
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

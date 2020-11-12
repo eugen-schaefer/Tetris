@@ -46,9 +46,10 @@ TetrominoGraphic::TetrominoGraphic(std::unique_ptr<Tetromino> shape,
     UpdatePosition();
 }
 
-void TetrominoGraphic::MoveOneStep(Direction direction) {
-    m_shape->MoveOneStep(direction);
+bool TetrominoGraphic::MoveOneStep(Direction direction) {
+    bool is_movement_succeed{m_shape->MoveOneStep(direction)};
     UpdatePosition();
+    return is_movement_succeed;
 }
 
 void TetrominoGraphic::Rotate() {
@@ -68,13 +69,11 @@ void TetrominoGraphic::UpdatePosition() {
     }
 }
 
-void TetrominoGraphic::DeleteTetrominoSquare(int index) {
-    m_shape->DeleteTetrominoSquare(index);
-    m_squares.erase(m_squares.begin() + index);
-}
-
-TetrominoPositionType TetrominoGraphic::GetPositionRelativeToLogicalGrid() {
-    return m_shape->GetPosition();
+void TetrominoGraphic::DeleteTetrominoSquare(
+    GraphicalSquaresIteratorType& graphical_iterator,
+    LogicalSquaresIteratorType& logical_iterator) {
+    m_shape->DeleteTetrominoSquare(logical_iterator);
+    graphical_iterator = m_squares.erase(graphical_iterator);
 }
 
 void TetrominoGraphic::draw(sf::RenderTarget& target,

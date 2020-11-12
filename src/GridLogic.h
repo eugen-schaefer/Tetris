@@ -15,6 +15,7 @@ class GridLogic : public IGridLogic {
     std::vector<int> GetIndexesOfFullyOccupiedRows() const;
     bool RequestSpaceOnGrid(TetrominoPositionType current_position,
                             TetrominoPositionType target_position) override;
+    void FreeAllEntirelyOccupiedRows();
 
    private:
     int m_number_columns;

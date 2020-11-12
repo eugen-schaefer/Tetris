@@ -18,7 +18,14 @@ std::vector<int> GridLogic::GetIndexesOfFullyOccupiedRows() const {
 
 bool GridLogic::RequestSpaceOnGrid(TetrominoPositionType current_position,
                                    TetrominoPositionType target_position) {
-    // TODO(Eugen): Assert current_position.size == target_position.size
+    if (current_position.empty() || target_position.empty()) {
+        return false;
+    }
+
+    if (current_position.size() != target_position.size()) {
+        return false;
+    }
+
     bool is_every_coordinate_within_bounds{true};
     for (const auto &position : target_position) {
         int pos_x{position.first}, pos_y{position.second};
@@ -100,6 +107,9 @@ bool GridLogic::RequestSpaceOnGrid(TetrominoPositionType current_position,
                         m_indexes_of_fully_occupied_rows.push_back(row_idx);
                     }
                     --row_idx;
+                    if (row_idx < 0) {
+                        break;
+                    }
                 }
 
                 is_request_successfull = true;
@@ -110,4 +120,16 @@ bool GridLogic::RequestSpaceOnGrid(TetrominoPositionType current_position,
     }
 
     return is_request_successfull;
+}
+
+void GridLogic::FreeAllEntirelyOccupiedRows() {
+    for (int row_index : m_indexes_of_fully_occupied_rows) {
+        // Free entire row
+        auto &column = m_occupancy_grid.at(row_index);
+        for (auto it = column.begin(); it != column.end();) {
+            *it = false;
+            ++it;
+        }
+    }
+    m_indexes_of_fully_occupied_rows.clear();
 }

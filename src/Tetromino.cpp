@@ -22,11 +22,12 @@ Tetromino::Tetromino(IGridLogic &grid_logic,
       m_color{color},
       m_is_movable{true} {};
 
-void Tetromino::MoveOneStep(Direction direction) {
+bool Tetromino::MoveOneStep(Direction direction) {
     if (!IsMovable()) {
-        return;
+        return false;
     }
 
+    bool is_movement_succeed{};
     TetrominoPositionType current_position{GetPosition()};
     TetrominoPositionType target_position{current_position};
     switch (direction) {
@@ -48,17 +49,24 @@ void Tetromino::MoveOneStep(Direction direction) {
     }
     if (m_grid_logic.RequestSpaceOnGrid(current_position, target_position)) {
         SetPosition(target_position);
+        is_movement_succeed = true;
     } else if (direction == Direction::down) {
         // TODO(Eugen): Consider waiting a short period of time (e.g. 1 second)
         // before locking. This waiting time would allow to horizontally move
         // the shape at the lowest possible level for the specified amount of
         // time before is is frozen forever.
         MakeUnmovable();
+        is_movement_succeed = false;
     }
+    return is_movement_succeed;
 }
 
-void Tetromino::DeleteTetrominoSquare(int index) {
-    m_position.erase(m_position.begin() + index);
+// iterator: Before erasing, it's iterator pointing to the element beeing
+//           removed
+//           After erasing, it's an iterator following the last removed
+//           element
+void Tetromino::DeleteTetrominoSquare(LogicalSquaresIteratorType &iterator) {
+    iterator = m_position.erase(iterator);
 }
 
 // Create I-shape such that it has its initial position in the upper left

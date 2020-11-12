@@ -26,6 +26,8 @@ enum class Orientation { north, east, south, west };
 
 using TetrominoPositionType = std::vector<std::pair<int, int>>;
 
+using LogicalSquaresIteratorType = TetrominoPositionType::iterator;
+
 TetrominoPositionType operator+(const TetrominoPositionType &position1,
                                 const TetrominoPositionType &position2);
 
@@ -36,14 +38,23 @@ class Tetromino {
               Color color);
     virtual Color GetColor() const { return m_color; }
     virtual TetrominoPositionType GetPosition() const { return m_position; }
-    virtual void MoveOneStep(Direction);
+    virtual bool MoveOneStep(Direction);
     virtual bool IsMovable() const { return m_is_movable; }
     virtual void MakeUnmovable() { m_is_movable = false; };
+    virtual void MakeMovable() {
+        m_is_movable = true;
+    };  // TODO(Eugen): add missing tests
     virtual void Rotate() {}
-    virtual void DeleteTetrominoSquare(int index);
+    virtual void DeleteTetrominoSquare(
+        LogicalSquaresIteratorType &logical_iterator);
+    virtual LogicalSquaresIteratorType GetIteratorToBeginOfPositionVector() {
+        return m_position.begin();
+    };
 
    protected:
-    void SetPosition(TetrominoPositionType position) { m_position = position; }
+    void SetPosition(TetrominoPositionType position) {
+        m_position = std::move(position);
+    }
     TetrominoPositionType m_position;
     IGridLogic &m_grid_logic;
 

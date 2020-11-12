@@ -32,6 +32,7 @@ PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
 
 void PlayGround::Update(sf::Event event) {
     if (m_active_shape) {
+        // process keyboard event for the active shape
         if ((event.type == sf::Event::KeyPressed) &&
             (event.key.code == sf::Keyboard::Left)) {
             m_active_shape->MoveOneStep(Direction::left);
@@ -46,14 +47,72 @@ void PlayGround::Update(sf::Event event) {
             m_active_shape->Rotate();
         }
 
+        // In case the active shape is frozen because it reached the lowest
+        // possible level on the grid, put it into m_frozen_shapes_on_grid. Then
+        // generate a new shape and put it in front of m_shapes_in_queue and pop
+        // a shape from the back of the m_shapes_in_queue. Finally, check
+        // occupancy grid for entirely occupied rows and clear them all if any.
         if (!m_active_shape->IsMovable()) {
-            m_shapes_on_grid.push_back(
-                std::move(m_active_shape));
-            m_active_shape =
-                std::move(m_shapes_in_queue.back());
+            m_frozen_shapes_on_grid.push_back(std::move(m_active_shape));
+            m_active_shape = std::move(m_shapes_in_queue.back());
             m_shapes_in_queue.pop_back();
             m_shapes_in_queue.push_front(
                 std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+
+            // check the occupancy grid for fully occupied rows
+            std::vector<int> vector_of_indexes_of_fully_occupied_rows =
+                m_grid_logic.GetIndexesOfFullyOccupiedRows();
+
+            // Clear entirely occupied rows
+            if (!vector_of_indexes_of_fully_occupied_rows.empty()) {
+                // Identify all affected tetrominoes by the fully occupied row
+                // and remove their affected parts (squares)
+                for (const int occupied_row_index :
+                     vector_of_indexes_of_fully_occupied_rows) {
+                    for (auto graphical_shape_iterator =
+                             m_frozen_shapes_on_grid.begin();
+                         graphical_shape_iterator !=
+                         m_frozen_shapes_on_grid.end();) {
+                        auto logical_chape_iterator =
+                            (*graphical_shape_iterator)
+                                ->GetIteratorToBeginOfLogicalTetromino();
+                        for (auto graphical_iterator =
+                                 (*graphical_shape_iterator)
+                                     ->GetIteratorToBeginOfGraphicalTetromino();
+                             graphical_iterator !=
+                             (*graphical_shape_iterator)
+                                 ->GetIteratorToEndOfGraphicalTetromino();) {
+                            if (logical_chape_iterator->first == occupied_row_index) {
+                                (*graphical_shape_iterator)
+                                    ->DeleteTetrominoSquare(graphical_iterator,
+                                                            logical_chape_iterator);
+                            } else {
+                                ++graphical_iterator;
+                                ++logical_chape_iterator;
+                            }
+                        }
+                        if ((*graphical_shape_iterator)->GetSquares().empty()) {
+                            graphical_shape_iterator =
+                                m_frozen_shapes_on_grid.erase(
+                                    graphical_shape_iterator);
+                        } else {
+                            ++graphical_shape_iterator;
+                        }
+                    }
+                }
+
+                // Free released rows
+                m_grid_logic.FreeAllEntirelyOccupiedRows();
+
+                // Unlock the movability of each tetromino on the grid, move
+                // each one down until it hits an obstacle and lock it again
+                for (auto& shape : m_frozen_shapes_on_grid) {
+                    shape->MakeMovable();
+                    while (shape->MoveOneStep(Direction::down)) {
+                    }
+                    shape->MakeUnmovable();
+                }
+            }
         }
     }
 }
@@ -63,9 +122,9 @@ void PlayGround::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     if (m_active_shape) {
         target.draw(*m_active_shape, states);
     }
-    if (!m_shapes_on_grid.empty()) {
-        for (const auto& shape : m_shapes_on_grid) {
-            target.draw(*shape);
+    if (!m_frozen_shapes_on_grid.empty()) {
+        for (const auto& graphical_shape : m_frozen_shapes_on_grid) {
+            target.draw(*graphical_shape);
         }
     }
 }
