@@ -1,6 +1,7 @@
 #include "PlayGround.h"
 
 #include <SFML/Graphics.hpp>
+#include <algorithm>
 
 class ShapeFactory {
    public:
@@ -19,7 +20,8 @@ PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
                        const sf::RenderWindow& window)
     : m_grid_logic{GridLogic(number_grid_rows, number_grid_columns)},
       m_grid_graphic{GridGraphic(number_grid_rows, number_grid_columns, 0.1f,
-                                 window.getSize())} {
+                                 window.getSize())},
+      m_score{0} {
     // generate two random shapes
     m_shapes_in_queue.push_front(
         std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
@@ -82,10 +84,12 @@ void PlayGround::Update(sf::Event event) {
                              graphical_iterator !=
                              (*graphical_shape_iterator)
                                  ->GetIteratorToEndOfGraphicalTetromino();) {
-                            if (logical_chape_iterator->first == occupied_row_index) {
+                            if (logical_chape_iterator->first ==
+                                occupied_row_index) {
                                 (*graphical_shape_iterator)
-                                    ->DeleteTetrominoSquare(graphical_iterator,
-                                                            logical_chape_iterator);
+                                    ->DeleteTetrominoSquare(
+                                        graphical_iterator,
+                                        logical_chape_iterator);
                             } else {
                                 ++graphical_iterator;
                                 ++logical_chape_iterator;
@@ -111,6 +115,62 @@ void PlayGround::Update(sf::Event event) {
                     while (shape->MoveOneStep(Direction::down)) {
                     }
                     shape->MakeUnmovable();
+                }
+
+                // update the score
+                // use the original BPS scoring system, see
+                // https://tetris.wiki/Scoring#Recent_guideline_compatible_games)
+                std::sort(vector_of_indexes_of_fully_occupied_rows.begin(),
+                          vector_of_indexes_of_fully_occupied_rows.end());
+
+                // First, identify single, double, triple or tetris
+                std::vector<int> line_clears;
+                int nr_successively_cleared_lines{1};
+                int prev_index{-10};
+                int total_number_cleared_lines{static_cast<int>(
+                    vector_of_indexes_of_fully_occupied_rows.size())};
+                for (size_t i = 0; i < total_number_cleared_lines; i++) {
+                    int row_index{
+                        vector_of_indexes_of_fully_occupied_rows.at(i)};
+                    bool is_first_loop_iteration{
+                        (i == 0) && (total_number_cleared_lines > 1)};
+                    if (is_first_loop_iteration) {
+                        prev_index = row_index;
+                        continue;
+                    }
+                    bool is_prev_line_cleared{(row_index - prev_index) == 1};
+                    if (is_prev_line_cleared) {
+                        ++nr_successively_cleared_lines;
+                        bool is_not_last_loop_iteration{
+                            i < total_number_cleared_lines - 1};
+                        if (is_not_last_loop_iteration) {
+                            prev_index = row_index;
+                            continue;
+                        }
+                    }
+                    line_clears.push_back(nr_successively_cleared_lines);
+                    nr_successively_cleared_lines = 1;
+                    prev_index = row_index;
+                }
+
+                // Then, calculate the corresponding score
+                for (int line_clear : line_clears) {
+                    switch (line_clear) {
+                        case 1:
+                            m_score += 40;
+                            break;
+                        case 2:
+                            m_score += 100;
+                            break;
+                        case 3:
+                            m_score += 300;
+                            break;
+                        case 4:
+                            m_score += 1200;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
