@@ -1,5 +1,8 @@
 #include "Game.h"
 
+#include <chrono>
+#include <thread>
+
 #include "GridGraphic.h"
 
 Game::Game(sf::RenderWindow& window, sf::Font& font)
@@ -14,7 +17,17 @@ Game::Game(sf::RenderWindow& window, sf::Font& font)
 
 void Game::start(sf::RenderWindow& window) {
     // Start the game loop
+    auto time_stamp_since_last_update{std::chrono::system_clock::now()};
+    long duration_ms_for_one_step_drop{700};
     while (window.isOpen()) {
+        // sleep at every iteration to reduce CPU usage
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+
+        long elapsed_time_since_last_update =
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                std::chrono::system_clock::now() - time_stamp_since_last_update)
+                .count();
+
         // Process events
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -22,8 +35,17 @@ void Game::start(sf::RenderWindow& window) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             };
-            m_play_ground.Update(event);
+            m_play_ground.ProcessKeyEvents(event);
         }
+
+        // Perfom periodic drop of the active shape
+        if (elapsed_time_since_last_update >= duration_ms_for_one_step_drop){
+            m_play_ground.MoveActiveShapeOneStepDown();
+            time_stamp_since_last_update = std::chrono::system_clock::now();
+        }
+
+        m_play_ground.ProcessLockDown();
+
         // Clear screen
         window.clear(sf::Color::White);
 

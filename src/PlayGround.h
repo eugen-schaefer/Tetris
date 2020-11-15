@@ -14,7 +14,9 @@ class PlayGround : public sf::Drawable {
    public:
     PlayGround(int number_grid_rows, int number_grid_columns,
                const sf::RenderWindow& window, sf::Font& font);
-    void Update(sf::Event event);
+    void ProcessKeyEvents(sf::Event event);
+    void ProcessLockDown();
+    void MoveActiveShapeOneStepDown();
 
    private:
     GridLogic m_grid_logic;

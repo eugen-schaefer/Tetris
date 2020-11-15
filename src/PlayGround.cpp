@@ -69,7 +69,7 @@ PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
     int a = 0;
 }
 
-void PlayGround::Update(sf::Event event) {
+void PlayGround::ProcessKeyEvents(sf::Event event) {
     if (m_active_shape) {
         // process keyboard event for the active shape
         if ((event.type == sf::Event::KeyPressed) &&
@@ -85,7 +85,11 @@ void PlayGround::Update(sf::Event event) {
                    (event.key.code == sf::Keyboard::Up)) {
             m_active_shape->Rotate();
         }
+    }
+}
 
+void PlayGround::ProcessLockDown() {
+    if (m_active_shape) {
         // In case the active shape is frozen because it reached the lowest
         // possible level on the grid, put it into m_frozen_shapes_on_grid. Then
         // generate a new shape and put it in front of m_shapes_in_queue and pop
@@ -218,6 +222,10 @@ void PlayGround::Update(sf::Event event) {
             }
         }
     }
+}
+
+void PlayGround::MoveActiveShapeOneStepDown() {
+    m_active_shape->MoveOneStep(Direction::down);
 }
 
 void PlayGround::draw(sf::RenderTarget& target, sf::RenderStates states) const {
