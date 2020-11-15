@@ -30,7 +30,15 @@ class TetrominoGraphic : public sf::Drawable {
     GraphicalSquaresIteratorType GetIteratorToEndOfGraphicalTetromino() {
         return m_squares.end();
     };
-    std::vector<sf::RectangleShape> GetSquares() const {return m_squares;};
+    std::vector<sf::RectangleShape> GetSquares() const { return m_squares; };
+
+    TetrominoType GetTetrominoType() { return m_shape->GetTetrominoType(); };
+
+    void SetPositionInDashboard(TetrominoPositionType position);
+
+    TetrominoPositionType GetPositionInGridLogicFrame() {
+        return m_shape->GetPosition();
+    }
 
    private:
     std::unique_ptr<Tetromino> m_shape;

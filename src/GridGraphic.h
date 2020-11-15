@@ -6,11 +6,11 @@
 
 class GridGraphic : public sf::Drawable {
    public:
-    // First entry in window_size corresponds to the window width and the second
-    // one to the window height.
+    GridGraphic() = default;
+
     GridGraphic(unsigned int number_rows, unsigned int number_columns,
-                float relative_margin,
-                const sf::Vector2<unsigned int>& window_size);
+                float pos_x_top_left_corner, float pos_y_top_left_corner,
+                float grid_height);
 
     // row = 0 corresponds to the top row and row = m-1 corresponds to the
     // bottom row.

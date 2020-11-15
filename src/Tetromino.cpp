@@ -71,9 +71,10 @@ void Tetromino::DeleteTetrominoSquare(LogicalSquaresIteratorType &iterator) {
 
 // Create I-shape such that it has its initial position in the upper left
 // corner, its orientation is horizontal and its color is cyan.
-ShapeI::ShapeI(IGridLogic &grid_logic)
+ShapeI::ShapeI(IGridLogic &grid_logic, TetrominoPositionType init_position)
     : m_orientation{Orientation::north},
-      Tetromino{grid_logic, {{0, 0}, {0, 1}, {0, 2}, {0, 3}}, Color::cyan} {}
+      Tetromino{grid_logic, init_position, Color::cyan},
+      m_tetromino_type{TetrominoType::I} {}
 
 void ShapeI::Rotate() {
     if (!IsMovable()) {

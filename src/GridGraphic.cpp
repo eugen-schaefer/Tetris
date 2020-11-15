@@ -4,22 +4,18 @@
 // pixel units
 
 GridGraphic::GridGraphic(unsigned int number_rows, unsigned int number_columns,
-                         float relative_margin,
-                         const sf::Vector2<unsigned int>& window_size) {
-    float window_width{static_cast<float>(window_size.x)};
-    float window_height{static_cast<float>(window_size.y)};
+                         float pos_x_top_left_corner,
+                         float pos_y_top_left_corner, float grid_height) {
     m_horizontal_lines = sf::VertexArray(sf::Lines, 2 * (number_rows + 1));
     m_vertical_lines = sf::VertexArray(sf::Lines, 2 * (number_columns + 1));
 
     // construct horizontal lines
-    float grid_height{(1.0f - 2.0f * relative_margin) * window_height};
     m_grid_cell_side_length = grid_height / static_cast<float>(number_rows);
     float grid_width{static_cast<float>(number_columns) *
                      m_grid_cell_side_length};
+    float pos_x_left_gridborder{pos_x_top_left_corner};
+    float pos_y_next_horizontal_line{pos_y_top_left_corner};
 
-    float pos_y_next_horizontal_line{relative_margin * window_height};
-    float pos_x_left_gridborder{(1.0f - relative_margin) * window_width -
-                                grid_width};
     for (int i{0}; i < 2 * number_rows + 1; i += 2) {
         // left end of the horizontal line
         m_horizontal_lines[i].position =
@@ -35,9 +31,8 @@ GridGraphic::GridGraphic(unsigned int number_rows, unsigned int number_columns,
     }
 
     // construct vertical lines
-    float pos_x_next_vertical_line{(1.0f - relative_margin) * window_width -
-                                   grid_width};
-    float pos_y_top_gridborder{relative_margin * window_height};
+    float pos_x_next_vertical_line{pos_x_top_left_corner};
+    float pos_y_top_gridborder{pos_y_top_left_corner};
     for (int i{0}; i < 2 * number_columns + 1; i += 2) {
         // top end of the vertical line
         m_vertical_lines[i].position =

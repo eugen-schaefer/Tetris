@@ -76,6 +76,11 @@ void TetrominoGraphic::DeleteTetrominoSquare(
     graphical_iterator = m_squares.erase(graphical_iterator);
 }
 
+void TetrominoGraphic::SetPositionInDashboard(TetrominoPositionType position) {
+    m_shape->SetPositionInDashboard(position);
+    UpdatePosition();
+}
+
 void TetrominoGraphic::draw(sf::RenderTarget& target,
                             sf::RenderStates states) const {
     for (auto& square : m_squares) {

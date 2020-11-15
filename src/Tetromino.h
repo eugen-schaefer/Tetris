@@ -20,7 +20,7 @@ enum class Color {
     red      // (0xFF0000)
 };
 
-enum class TetrominoType { I, O, T, J, L, S, Z };
+enum class TetrominoType { I, O, T, J, L, S, Z, UNDEFINED };
 
 enum class Orientation { north, east, south, west };
 
@@ -38,6 +38,13 @@ class Tetromino {
               Color color);
     virtual Color GetColor() const { return m_color; }
     virtual TetrominoPositionType GetPosition() const { return m_position; }
+    // This method is supposed to be used only to set tetrominos in the
+    // dashboard. Since SetPositionInDashboard() places shapes on the grid
+    // regardless of the grid occupancy on the corresponding place,
+    // the MoveOneStep() shall be used for game usage instead.
+    virtual void SetPositionInDashboard(TetrominoPositionType position) {
+        m_position = position;
+    }
     virtual bool MoveOneStep(Direction);
     virtual bool IsMovable() const { return m_is_movable; }
     virtual void MakeUnmovable() { m_is_movable = false; };
@@ -49,6 +56,9 @@ class Tetromino {
         LogicalSquaresIteratorType &logical_iterator);
     virtual LogicalSquaresIteratorType GetIteratorToBeginOfPositionVector() {
         return m_position.begin();
+    };
+    virtual TetrominoType GetTetrominoType() {
+        return TetrominoType::UNDEFINED;
     };
 
    protected:
@@ -72,9 +82,11 @@ class Tetromino {
 class ShapeI : public Tetromino {
    public:
     ShapeI() = delete;
-    ShapeI(IGridLogic &grid_logic);
+    ShapeI(IGridLogic &grid_logic, TetrominoPositionType init_position = {
+                                       {0, 0}, {0, 1}, {0, 2}, {0, 3}});
     Orientation GetOrientation() { return m_orientation; }
     void Rotate() override;
+    TetrominoType GetTetrominoType() override { return m_tetromino_type; };
 
    private:
     const std::map<std::string, TetrominoPositionType> m_delta_positions{
@@ -83,6 +95,7 @@ class ShapeI : public Tetromino {
         {"SouthWest", {{1, -2}, {0, -1}, {-1, 0}, {-2, 1}}},
         {"WestNorth", {{-1, -1}, {0, 0}, {1, 1}, {2, 2}}}};
     Orientation m_orientation;
+    TetrominoType m_tetromino_type;
 };
 
 #endif /* TETROMINO_H_ */

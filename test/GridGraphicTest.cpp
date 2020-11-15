@@ -6,15 +6,14 @@
 class GridGraphicTest : public ::testing::Test {
    protected:
     GridGraphicTest()
-        : window_size{window_width, window_height},
-          grid_graphic{number_rows, number_columns, relative_margin,
-                       window_size} {};
+        : grid_graphic{number_rows, number_columns, pos_x_top_left_corner,
+                       pos_y_top_left_corner, grid_height} {};
     unsigned int number_rows{4};
     unsigned int number_columns{3};
-    float relative_margin{0.1f};
-    unsigned int window_width{400};
-    unsigned int window_height{600};
-    sf::Vector2u window_size;
+    float pos_x_top_left_corner{200.f};
+    float pos_y_top_left_corner{30.f};
+    float grid_height{600};
+
     GridGraphic grid_graphic;
 };
 

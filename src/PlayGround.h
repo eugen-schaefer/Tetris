@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 
+#include "Dashboard.h"
 #include "GridGraphic.h"
 #include "GridLogic.h"
 #include "TetrominoGraphic.h"
@@ -12,7 +13,7 @@
 class PlayGround : public sf::Drawable {
    public:
     PlayGround(int number_grid_rows, int number_grid_columns,
-               const sf::RenderWindow& window);
+               const sf::RenderWindow& window, sf::Font& font);
     void Update(sf::Event event);
 
    private:
@@ -22,7 +23,7 @@ class PlayGround : public sf::Drawable {
     std::vector<std::unique_ptr<TetrominoGraphic>> m_frozen_shapes_on_grid;
     std::unique_ptr<TetrominoGraphic> m_active_shape;
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-    unsigned int m_score;
+    Dashboard m_dashboard;
 };
 
 #endif /* PLAY_GROUND_H_ */

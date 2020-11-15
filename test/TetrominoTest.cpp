@@ -86,7 +86,6 @@ TEST_F(TetrominoTest, GetColorOfTetromino) {
 }
 
 TEST_F(TetrominoTest, MoveToTheRightPossible) {
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::right,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -95,7 +94,6 @@ TEST_F(TetrominoTest, MoveToTheRightPossible) {
 }
 
 TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfOccupiedTargetRegion) {
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::right,
                                           kTargetPositionOccupied);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -105,7 +103,6 @@ TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfOccupiedTargetRegion) {
 
 TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfMovabilityFreeze) {
     unit.MakeUnmovable();
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::right,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -114,7 +111,6 @@ TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfMovabilityFreeze) {
 }
 
 TEST_F(TetrominoTest, MoveToTheLeftPossible) {
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::left,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -123,7 +119,6 @@ TEST_F(TetrominoTest, MoveToTheLeftPossible) {
 }
 
 TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfOccupiedTargetRegion) {
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::left,
                                           kTargetPositionOccupied);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -133,7 +128,6 @@ TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfOccupiedTargetRegion) {
 
 TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfMovabilityFreeze) {
     unit.MakeUnmovable();
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::left,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -142,7 +136,6 @@ TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfMovabilityFreeze) {
 }
 
 TEST_F(TetrominoTest, MoveDownPossible) {
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::down,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -151,7 +144,6 @@ TEST_F(TetrominoTest, MoveDownPossible) {
 }
 
 TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfOccupiedTargetRegion) {
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::down,
                                           kTargetPositionOccupied);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -161,7 +153,6 @@ TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfOccupiedTargetRegion) {
 
 TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfMovabilityFreeze) {
     unit.MakeUnmovable();
-    TetrominoPositionType expected_position{init_position};
     auto result = MoveTetrominoIfPossible(init_position, Direction::down,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();

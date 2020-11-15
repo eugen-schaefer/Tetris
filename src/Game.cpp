@@ -2,9 +2,8 @@
 
 #include "GridGraphic.h"
 
-Game::Game(sf::RenderWindow& window)
-    : m_grid{GridGraphic(20, 10, 0.1, window.getSize())},
-      m_play_ground{PlayGround(20, 10, window)} {
+Game::Game(sf::RenderWindow& window, sf::Font& font)
+    : m_play_ground{PlayGround(m_number_rows, m_number_columns, window, font)} {
     // Center the main window
     auto desktop = sf::VideoMode::getDesktopMode();
     sf::Vector2<int> new_position{

@@ -17,19 +17,56 @@ class ShapeFactory {
 };
 
 PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
-                       const sf::RenderWindow& window)
-    : m_grid_logic{GridLogic(number_grid_rows, number_grid_columns)},
-      m_grid_graphic{GridGraphic(number_grid_rows, number_grid_columns, 0.1f,
-                                 window.getSize())},
-      m_score{0} {
-    // generate two random shapes
+                       const sf::RenderWindow& window, sf::Font& font)
+    : m_grid_logic{GridLogic(number_grid_rows, number_grid_columns)} {
+    // Create a drawble grid object
+    float relative_top_margin{0.1f};
+    float window_width{static_cast<float>(window.getSize().x)};
+    float window_height{static_cast<float>(window.getSize().y)};
+
+    float grid_height{(1.0f - 2.0f * relative_top_margin) * window_height};
+    float grid_cell_side_length =
+        grid_height / static_cast<float>(number_grid_rows);
+    float grid_width{static_cast<float>(number_grid_columns) *
+                     grid_cell_side_length};
+
+    float pos_x_top_left_corner{(1.0f - relative_top_margin) * window_width -
+                                grid_width};
+    float pos_y_top_left_corner{relative_top_margin * window_height};
+
+    m_grid_graphic =
+        GridGraphic(number_grid_rows, number_grid_columns,
+                    pos_x_top_left_corner, pos_y_top_left_corner, grid_height);
+
+    // generate three random shapes and put them all in a queue
+    m_shapes_in_queue.push_front(
+        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
     m_shapes_in_queue.push_front(
         std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
     m_shapes_in_queue.push_front(
         std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
 
+    // generate a shape being actively moved on the grid
     m_active_shape =
         std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic));
+
+    // generate a dashboard
+    float offset_window_top_border{0.1f *
+                                   static_cast<float>(window.getSize().y)};
+    float available_width{window.getSize().x - grid_width -
+                          0.1f * window.getSize().x};
+    float max_available_height{grid_height};
+    m_dashboard = Dashboard(offset_window_top_border, available_width,
+                            max_available_height, font);
+
+    // insert all elements from m_shapes_in_queue into the dashboard queue
+    m_dashboard.InsertNextTetromino(
+        m_shapes_in_queue.at(0)->GetTetrominoType());
+    m_dashboard.InsertNextTetromino(
+        m_shapes_in_queue.at(1)->GetTetrominoType());
+    m_dashboard.InsertNextTetromino(
+        m_shapes_in_queue.at(2)->GetTetrominoType());
+    int a = 0;
 }
 
 void PlayGround::Update(sf::Event event) {
@@ -60,6 +97,8 @@ void PlayGround::Update(sf::Event event) {
             m_shapes_in_queue.pop_back();
             m_shapes_in_queue.push_front(
                 std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+            m_dashboard.InsertNextTetromino(
+                m_shapes_in_queue.at(0)->GetTetrominoType());
 
             // check the occupancy grid for fully occupied rows
             std::vector<int> vector_of_indexes_of_fully_occupied_rows =
@@ -157,16 +196,20 @@ void PlayGround::Update(sf::Event event) {
                 for (int line_clear : line_clears) {
                     switch (line_clear) {
                         case 1:
-                            m_score += 40;
+                            m_dashboard.AddToScore(40);
+                            m_dashboard.AddToClearedLines(1);
                             break;
                         case 2:
-                            m_score += 100;
+                            m_dashboard.AddToScore(100);
+                            m_dashboard.AddToClearedLines(2);
                             break;
                         case 3:
-                            m_score += 300;
+                            m_dashboard.AddToScore(300);
+                            m_dashboard.AddToClearedLines(3);
                             break;
                         case 4:
-                            m_score += 1200;
+                            m_dashboard.AddToScore(1200);
+                            m_dashboard.AddToClearedLines(4);
                             break;
                         default:
                             break;
@@ -187,4 +230,5 @@ void PlayGround::draw(sf::RenderTarget& target, sf::RenderStates states) const {
             target.draw(*graphical_shape);
         }
     }
+    target.draw(m_dashboard);
 }

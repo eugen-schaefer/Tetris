@@ -1,18 +1,16 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include <SFML/Graphics.hpp>
-
-#include "GridGraphic.h"
 #include "PlayGround.h"
 
 class Game {
    public:
-    Game(sf::RenderWindow&);
+    Game(sf::RenderWindow&, sf::Font& font);
     void start(sf::RenderWindow&);
 
    private:
-    GridGraphic m_grid;
+    int m_number_rows{20};
+    int m_number_columns{10};
     PlayGround m_play_ground;
 };
 
