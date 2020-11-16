@@ -9,10 +9,11 @@ class ShapeFactory {
                                                     GridGraphic& grid_graphic) {
         // TODO(Eugen): workarround for the start, consider random generation
         // here
-        TetrominoPositionType init_position = {{0, 3}, {0, 4}, {0, 5}, {0, 6}};
+        //TetrominoPositionType init_position = {{0, 3}, {0, 4}, {0, 5}, {0, 6}}; // ShapeI
+        TetrominoPositionType init_position = {{0, 3}, {1, 3}, {1, 4}, {1, 5}}; // ShapeJ
         std::unique_ptr<TetrominoGraphic> m_active_graphic_shape_ptr =
             std::make_unique<TetrominoGraphic>(
-                std::make_unique<ShapeI>(grid_logic, init_position),
+                std::make_unique<ShapeJ>(grid_logic, init_position),
                 grid_graphic);
         return std::move(m_active_graphic_shape_ptr);
     }

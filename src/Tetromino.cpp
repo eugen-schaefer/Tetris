@@ -122,3 +122,57 @@ void ShapeI::Rotate() {
             break;
     }
 }
+
+// Create J-shape such that it has its initial position in the upper left
+// corner, its orientation is horizontal and its color is blue.
+ShapeJ::ShapeJ(IGridLogic &grid_logic, TetrominoPositionType init_position)
+    : m_orientation{Orientation::north},
+      Tetromino{grid_logic, init_position, Color::blue},
+      m_tetromino_type{TetrominoType::J} {}
+
+void ShapeJ::Rotate() {
+    if (!IsMovable()) {
+        return;
+    }
+
+    TetrominoPositionType current_position{GetPosition()};
+    TetrominoPositionType target_position{};
+    switch (m_orientation) {
+        case Orientation::north:
+            target_position =
+                current_position + m_delta_positions.at("NorthEast");
+            if (m_grid_logic.RequestSpaceOnGrid(current_position,
+                                                target_position)) {
+                SetPosition(target_position);
+                m_orientation = Orientation::east;
+            }
+            break;
+        case Orientation::east:
+            target_position =
+                current_position + m_delta_positions.at("EastSouth");
+            if (m_grid_logic.RequestSpaceOnGrid(current_position,
+                                                target_position)) {
+                SetPosition(target_position);
+                m_orientation = Orientation::south;
+            }
+            break;
+        case Orientation::south:
+            target_position =
+                current_position + m_delta_positions.at("SouthWest");
+            if (m_grid_logic.RequestSpaceOnGrid(current_position,
+                                                target_position)) {
+                SetPosition(target_position);
+                m_orientation = Orientation::west;
+            }
+            break;
+        case Orientation::west:
+            target_position =
+                current_position + m_delta_positions.at("WestNorth");
+            if (m_grid_logic.RequestSpaceOnGrid(current_position,
+                                                target_position)) {
+                SetPosition(target_position);
+                m_orientation = Orientation::north;
+            }
+            break;
+    }
+}
