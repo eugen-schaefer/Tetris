@@ -133,3 +133,9 @@ void GridLogic::FreeAllEntirelyOccupiedRows() {
     }
     m_indexes_of_fully_occupied_rows.clear();
 }
+
+void GridLogic::FreeEntireGrid(){
+    for (auto &row : m_occupancy_grid){
+        std::fill(row.begin(), row.end(), false);
+    }
+}

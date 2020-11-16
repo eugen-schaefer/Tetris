@@ -40,6 +40,8 @@ class TetrominoGraphic : public sf::Drawable {
         return m_shape->GetPosition();
     }
 
+    int GetHighestRow();
+
    private:
     std::unique_ptr<Tetromino> m_shape;
     const GridGraphic& m_grid_graphic;

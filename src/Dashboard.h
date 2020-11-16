@@ -26,6 +26,8 @@ class Dashboard : public sf::Drawable {
 
     void AddToClearedLines(int nr_cleared_lines);
 
+    void Reset();
+
    private:
     unsigned int m_score{};
     unsigned int m_number_cleared_lines{};

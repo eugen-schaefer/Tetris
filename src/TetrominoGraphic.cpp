@@ -81,6 +81,16 @@ void TetrominoGraphic::SetPositionInDashboard(TetrominoPositionType position) {
     UpdatePosition();
 }
 
+int TetrominoGraphic::GetHighestRow() {
+    int highest_occupied_row{1000};
+    for (const auto& square_position : GetPositionInGridLogicFrame()) {
+        if (square_position.first < highest_occupied_row) {
+            highest_occupied_row = square_position.first;
+        }
+    }
+    return highest_occupied_row;
+}
+
 void TetrominoGraphic::draw(sf::RenderTarget& target,
                             sf::RenderStates states) const {
     for (auto& square : m_squares) {

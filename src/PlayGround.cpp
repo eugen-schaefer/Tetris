@@ -18,7 +18,11 @@ class ShapeFactory {
 
 PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
                        const sf::RenderWindow& window, sf::Font& font)
-    : m_grid_logic{GridLogic(number_grid_rows, number_grid_columns)} {
+    : m_number_grid_rows{number_grid_rows},
+      m_number_grid_columns{number_grid_columns},
+      m_is_game_over{false},
+      m_is_game_over_announced{false},
+      m_grid_logic{GridLogic(number_grid_rows, number_grid_columns)} {
     // Create a drawble grid object
     float relative_top_margin{0.1f};
     float window_width{static_cast<float>(window.getSize().x)};
@@ -30,25 +34,13 @@ PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
     float grid_width{static_cast<float>(number_grid_columns) *
                      grid_cell_side_length};
 
-    float pos_x_top_left_corner{(1.0f - relative_top_margin) * window_width -
-                                grid_width};
-    float pos_y_top_left_corner{relative_top_margin * window_height};
+    float grid_pos_x_top_left_corner{
+        (1.0f - relative_top_margin) * window_width - grid_width};
+    float grid_pos_y_top_left_corner{relative_top_margin * window_height};
 
-    m_grid_graphic =
-        GridGraphic(number_grid_rows, number_grid_columns,
-                    pos_x_top_left_corner, pos_y_top_left_corner, grid_height);
-
-    // generate three random shapes and put them all in a queue
-    m_shapes_in_queue.push_front(
-        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
-    m_shapes_in_queue.push_front(
-        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
-    m_shapes_in_queue.push_front(
-        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
-
-    // generate a shape being actively moved on the grid
-    m_active_shape =
-        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic));
+    m_grid_graphic = GridGraphic(number_grid_rows, number_grid_columns,
+                                 grid_pos_x_top_left_corner,
+                                 grid_pos_y_top_left_corner, grid_height);
 
     // generate a dashboard
     float offset_window_top_border{0.1f *
@@ -59,31 +51,71 @@ PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
     m_dashboard = Dashboard(offset_window_top_border, available_width,
                             max_available_height, font);
 
-    // insert all elements from m_shapes_in_queue into the dashboard queue
-    m_dashboard.InsertNextTetromino(
-        m_shapes_in_queue.at(0)->GetTetrominoType());
-    m_dashboard.InsertNextTetromino(
-        m_shapes_in_queue.at(1)->GetTetrominoType());
-    m_dashboard.InsertNextTetromino(
-        m_shapes_in_queue.at(2)->GetTetrominoType());
-    int a = 0;
+    // Setup game over text
+    m_game_over_text.setString("!!! GAME OVER !!!");
+    m_game_over_text.setFillColor(sf::Color::Red);
+    m_game_over_text.setFont(font);
+    m_game_over_text.setCharacterSize(60);
+    m_game_over_text.setStyle(sf::Text::Bold);
+    auto grid_position_top_left_corner =
+        m_grid_graphic.GetPositionRelativeToWindow(0, 0);
+    auto grid_position_top_right_corner =
+        m_grid_graphic.GetPositionRelativeToWindow(0,
+                                                   m_number_grid_columns - 1);
+    auto grid_position_bottom_left_corner =
+        m_grid_graphic.GetPositionRelativeToWindow(m_number_grid_rows - 1, 0);
+
+    float text_position_x{grid_pos_x_top_left_corner + grid_width / 2.f};
+    float text_position_y{grid_pos_y_top_left_corner + grid_height / 3.f};
+
+    m_game_over_text.setPosition(text_position_x, text_position_y);
+
+    auto label_width = m_game_over_text.getLocalBounds().width;
+    auto label_height = m_game_over_text.getGlobalBounds().height;
+    m_game_over_text.setOrigin(label_width / 2.f, label_height / 2.f);
+
+    // Setup new game text
+    m_start_new_game_text.setString("Start new game with Ctrl + N");
+    m_start_new_game_text.setFillColor(sf::Color::Blue);
+    m_start_new_game_text.setFont(font);
+    m_start_new_game_text.setCharacterSize(34);
+    m_start_new_game_text.setStyle(sf::Text::Bold);
+    text_position_x = grid_pos_x_top_left_corner + grid_width / 2.f;
+    text_position_y = m_game_over_text.getGlobalBounds().top +
+                      2.f * m_game_over_text.getGlobalBounds().height;
+    m_start_new_game_text.setPosition(text_position_x, text_position_y);
+    label_width = m_start_new_game_text.getLocalBounds().width;
+    label_height = m_start_new_game_text.getGlobalBounds().height;
+    m_start_new_game_text.setOrigin(label_width / 2.f, label_height / 2.f);
+
+    StartNewGame();
 }
 
 void PlayGround::ProcessKeyEvents(sf::Event event) {
     if (m_active_shape) {
         // process keyboard event for the active shape
         if ((event.type == sf::Event::KeyPressed) &&
-            (event.key.code == sf::Keyboard::Left)) {
+            (event.key.code == sf::Keyboard::Left) && (!m_is_game_over)) {
             m_active_shape->MoveOneStep(Direction::left);
         } else if ((event.type == sf::Event::KeyPressed) &&
-                   (event.key.code == sf::Keyboard::Right)) {
+                   (event.key.code == sf::Keyboard::Right) &&
+                   (!m_is_game_over)) {
             m_active_shape->MoveOneStep(Direction::right);
         } else if ((event.type == sf::Event::KeyPressed) &&
-                   (event.key.code == sf::Keyboard::Down)) {
-            m_active_shape->MoveOneStep(Direction::down);
+                   (event.key.code == sf::Keyboard::Down) &&
+                   (!m_is_game_over)) {
+            bool is_movement_succeed{
+                m_active_shape->MoveOneStep(Direction::down)};
+            if (!is_movement_succeed &&
+                (m_active_shape->GetHighestRow() == 0)) {
+                m_is_game_over = true;
+            }
         } else if ((event.type == sf::Event::KeyPressed) &&
-                   (event.key.code == sf::Keyboard::Up)) {
+                   (event.key.code == sf::Keyboard::Up) && (!m_is_game_over)) {
             m_active_shape->Rotate();
+        } else if ((event.type == sf::Event::KeyPressed) &&
+                   (event.key.control) && (event.key.code == sf::Keyboard::N)) {
+            StartNewGame();
         }
     }
 }
@@ -225,18 +257,59 @@ void PlayGround::ProcessLockDown() {
 }
 
 void PlayGround::MoveActiveShapeOneStepDown() {
-    m_active_shape->MoveOneStep(Direction::down);
+    if (m_active_shape) {
+        bool is_movement_succeed{m_active_shape->MoveOneStep(Direction::down)};
+        if (!is_movement_succeed && (m_active_shape->GetHighestRow() == 0)) {
+            m_is_game_over = true;
+        }
+    }
+}
+
+void PlayGround::StartNewGame() {
+    // Reset the state of current game
+    m_is_game_over = false;
+    m_is_game_over_announced = false;
+    m_grid_logic.FreeEntireGrid();
+    m_shapes_in_queue.clear();
+    m_frozen_shapes_on_grid.clear();
+    m_active_shape = nullptr;
+    m_dashboard.Reset();
+
+    // generate three random shapes and put them all in a queue
+    m_shapes_in_queue.push_front(
+        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+    m_shapes_in_queue.push_front(
+        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+    m_shapes_in_queue.push_front(
+        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+
+    // generate a shape being actively moved on the grid
+    m_active_shape =
+        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic));
+
+    // insert all elements from m_shapes_in_queue into the dashboard queue
+    m_dashboard.InsertNextTetromino(
+        m_shapes_in_queue.at(0)->GetTetrominoType());
+    m_dashboard.InsertNextTetromino(
+        m_shapes_in_queue.at(1)->GetTetrominoType());
+    m_dashboard.InsertNextTetromino(
+        m_shapes_in_queue.at(2)->GetTetrominoType());
 }
 
 void PlayGround::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    target.draw(m_grid_graphic, states);
-    if (m_active_shape) {
-        target.draw(*m_active_shape, states);
-    }
-    if (!m_frozen_shapes_on_grid.empty()) {
-        for (const auto& graphical_shape : m_frozen_shapes_on_grid) {
-            target.draw(*graphical_shape);
+    if (m_is_game_over) {
+        target.draw(m_game_over_text, states);
+        target.draw(m_start_new_game_text, states);
+    } else {
+        target.draw(m_grid_graphic, states);
+        if (m_active_shape) {
+            target.draw(*m_active_shape, states);
         }
+        if (!m_frozen_shapes_on_grid.empty()) {
+            for (const auto& graphical_shape : m_frozen_shapes_on_grid) {
+                target.draw(*graphical_shape);
+            }
+        }
+        target.draw(m_dashboard);
     }
-    target.draw(m_dashboard);
 }

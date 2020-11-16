@@ -168,6 +168,17 @@ void Dashboard::AddToScore(int score) {
 void Dashboard::AddToClearedLines(int nr_cleared_lines) {
     m_number_cleared_lines += nr_cleared_lines;
     m_cleared_lines_number.setString(std::to_string(m_number_cleared_lines));
+    set_origin_to_middle(m_cleared_lines_number);
+}
+
+void Dashboard::Reset() {
+    m_shapes_in_queue.clear();
+    m_score = 0;
+    m_number_cleared_lines = 0;
+    m_score_number.setString(std::to_string(m_score));
+    set_origin_to_middle(m_score_number);
+    m_cleared_lines_number.setString(std::to_string(m_number_cleared_lines));
+    set_origin_to_middle(m_cleared_lines_number);
 }
 
 void Dashboard::draw(sf::RenderTarget &target, sf::RenderStates states) const {
