@@ -148,12 +148,18 @@ void Dashboard::InsertNextTetromino(TetrominoType shape) {
 
     // Insert a new element to the back of the queue and
     // place it as the lowest element on the dashboard grid
+    TetrominoPositionType init_position{};
     switch (shape) {
         case TetrominoType::I:
-            TetrominoPositionType init_position = {
-                {12, 0}, {12, 1}, {12, 2}, {12, 3}};
+            init_position = {{12, 0}, {12, 1}, {12, 2}, {12, 3}};
             m_shapes_in_queue.emplace_back(
                 std::make_unique<ShapeI>(m_dashboard_grid_logic, init_position),
+                m_dashboard_grid_graphic);
+            break;
+        case TetrominoType::J:
+            init_position = {{11, 0}, {12, 0}, {12, 1}, {12, 2}};
+            m_shapes_in_queue.emplace_back(
+                std::make_unique<ShapeJ>(m_dashboard_grid_logic, init_position),
                 m_dashboard_grid_graphic);
             break;
     }
