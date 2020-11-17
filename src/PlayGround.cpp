@@ -12,10 +12,11 @@ class ShapeFactory {
         // TetrominoPositionType init_position = {{0, 3}, {0, 4}, {0, 5}, {0, 6}}; //ShapeI
         // TetrominoPositionType init_position = {{0, 3}, {1, 3}, {1, 4}, {1, 5}}; //ShapeJ
         // TetrominoPositionType init_position = {{0, 5}, {1, 3}, {1, 4}, {1, 5}};  // ShapeL
-        TetrominoPositionType init_position = {{0, 4}, {0, 5}, {1, 5}, {1, 4}};  // ShapeO
+        // TetrominoPositionType init_position = {{0, 4}, {0, 5}, {1, 5}, {1, 4}};  // ShapeO
+        TetrominoPositionType init_position = {{0, 4}, {0, 5}, {1, 4}, {1, 3}};  // ShapeS
         std::unique_ptr<TetrominoGraphic> m_active_graphic_shape_ptr =
             std::make_unique<TetrominoGraphic>(
-                std::make_unique<ShapeO>(grid_logic, init_position),
+                std::make_unique<ShapeS>(grid_logic, init_position),
                 grid_graphic);
         return std::move(m_active_graphic_shape_ptr);
     }

@@ -150,4 +150,23 @@ class ShapeO : public Tetromino {
     TetrominoType m_tetromino_type;
 };
 
+class ShapeS : public Tetromino {
+   public:
+    ShapeS() = delete;
+    ShapeS(IGridLogic &grid_logic, TetrominoPositionType init_position = {
+                                       {0, 4}, {0, 5}, {1, 4}, {1, 3}});
+    Orientation GetOrientation() { return m_orientation; }
+    void Rotate() override;
+    TetrominoType GetTetrominoType() override { return m_tetromino_type; };
+
+   private:
+    const std::map<std::string, TetrominoPositionType> m_delta_positions{
+        {"NorthEast", {{1, 1}, {2, 0}, {0, 0}, {-1, 1}}},
+        {"EastSouth", {{1, -1}, {0, -2}, {0, 0}, {1, 1}}},
+        {"SouthWest", {{-1, -1}, {-2, 0}, {0, 0}, {1, -1}}},
+        {"WestNorth", {{-1, 1}, {0, 2}, {0, 0}, {-1, -1}}}};
+    Orientation m_orientation;
+    TetrominoType m_tetromino_type;
+};
+
 #endif /* TETROMINO_H_ */
