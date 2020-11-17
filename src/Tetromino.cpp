@@ -230,3 +230,12 @@ void ShapeL::Rotate() {
             break;
     }
 }
+
+// Create O-shape such that it has its initial position in the upper left
+// corner, its orientation is horizontal and its color is yellow.
+ShapeO::ShapeO(IGridLogic &grid_logic, TetrominoPositionType init_position)
+    : m_orientation{Orientation::north},
+      Tetromino{grid_logic, init_position, Color::yellow},
+      m_tetromino_type{TetrominoType::O} {}
+
+void ShapeO::Rotate() {}

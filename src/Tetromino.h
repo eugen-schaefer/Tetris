@@ -136,4 +136,18 @@ class ShapeL : public Tetromino {
     TetrominoType m_tetromino_type;
 };
 
+class ShapeO : public Tetromino {
+   public:
+    ShapeO() = delete;
+    ShapeO(IGridLogic &grid_logic, TetrominoPositionType init_position = {
+                                       {0, 0}, {0, 1}, {1, 1}, {1, 0}});
+    Orientation GetOrientation() { return m_orientation; }
+    void Rotate() override;
+    TetrominoType GetTetrominoType() override { return m_tetromino_type; };
+
+   private:
+    Orientation m_orientation;
+    TetrominoType m_tetromino_type;
+};
+
 #endif /* TETROMINO_H_ */
