@@ -186,6 +186,12 @@ void Dashboard::InsertNextTetromino(TetrominoType shape) {
                 std::make_unique<ShapeT>(m_dashboard_grid_logic, init_position),
                 m_dashboard_grid_graphic);
             break;
+        case TetrominoType::Z:
+            init_position = {{11, 0}, {11, 1}, {12, 1}, {12, 2}};
+            m_shapes_in_queue.emplace_back(
+                std::make_unique<ShapeZ>(m_dashboard_grid_logic, init_position),
+                m_dashboard_grid_graphic);
+            break;
     }
 };
 

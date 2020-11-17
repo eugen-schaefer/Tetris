@@ -14,10 +14,11 @@ class ShapeFactory {
         // TetrominoPositionType init_position = {{0, 5}, {1, 3}, {1, 4}, {1, 5}};  // ShapeL
         // TetrominoPositionType init_position = {{0, 4}, {0, 5}, {1, 5}, {1, 4}};  // ShapeO
         // TetrominoPositionType init_position = {{0, 4}, {0, 5}, {1, 4}, {1, 3}};  // ShapeS
-        TetrominoPositionType init_position = {{0, 4}, {1, 3}, {1, 4}, {1, 5}};  // ShapeT
+        // TetrominoPositionType init_position = {{0, 4}, {1, 3}, {1, 4}, {1, 5}};  // ShapeT
+        TetrominoPositionType init_position = {{0, 3}, {0, 4}, {1, 4}, {1, 5}};  // ShapeT
         std::unique_ptr<TetrominoGraphic> m_active_graphic_shape_ptr =
             std::make_unique<TetrominoGraphic>(
-                std::make_unique<ShapeT>(grid_logic, init_position),
+                std::make_unique<ShapeZ>(grid_logic, init_position),
                 grid_graphic);
         return std::move(m_active_graphic_shape_ptr);
     }
@@ -60,7 +61,7 @@ PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
 
     // Setup game over text
     m_game_over_text.setString("!!! GAME OVER !!!");
-    m_game_over_text.setFillColor(sf::Color::Red);
+    m_game_over_text.setFillColor(sf::Color::Black);
     m_game_over_text.setFont(font);
     m_game_over_text.setCharacterSize(60);
     m_game_over_text.setStyle(sf::Text::Bold);
@@ -83,7 +84,7 @@ PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
 
     // Setup new game text
     m_start_new_game_text.setString("Start new game with Ctrl + N");
-    m_start_new_game_text.setFillColor(sf::Color::Blue);
+    m_start_new_game_text.setFillColor(sf::Color::Black);
     m_start_new_game_text.setFont(font);
     m_start_new_game_text.setCharacterSize(34);
     m_start_new_game_text.setStyle(sf::Text::Bold);

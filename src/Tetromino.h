@@ -154,7 +154,7 @@ class ShapeS : public Tetromino {
    public:
     ShapeS() = delete;
     ShapeS(IGridLogic &grid_logic, TetrominoPositionType init_position = {
-                                       {0, 4}, {0, 5}, {1, 4}, {1, 3}});
+                                       {0, 1}, {0, 2}, {1, 1}, {1, 0}});
     Orientation GetOrientation() { return m_orientation; }
     void Rotate() override;
     TetrominoType GetTetrominoType() override { return m_tetromino_type; };
@@ -184,6 +184,25 @@ class ShapeT : public Tetromino {
         {"EastSouth", {{2, 0}, {0, 0}, {0, 0}, {-1, -1}}},
         {"SouthWest", {{-1, -1}, {1, -1}, {0, 0}, {-1, 1}}},
         {"WestNorth", {{-1, 1}, {-1, -1}, {0, 0}, {1, 1}}}};
+    Orientation m_orientation;
+    TetrominoType m_tetromino_type;
+};
+
+class ShapeZ : public Tetromino {
+   public:
+    ShapeZ() = delete;
+    ShapeZ(IGridLogic &grid_logic, TetrominoPositionType init_position = {
+                                       {0, 0}, {0, 1}, {1, 1}, {1, 2}});
+    Orientation GetOrientation() { return m_orientation; }
+    void Rotate() override;
+    TetrominoType GetTetrominoType() override { return m_tetromino_type; };
+
+   private:
+    const std::map<std::string, TetrominoPositionType> m_delta_positions{
+        {"NorthEast", {{0, 2}, {1, 1}, {0, 0}, {1, -1}}},
+        {"EastSouth", {{2, 0}, {1, -1}, {0, 0}, {-1, -1}}},
+        {"SouthWest", {{0, -2}, {-1, -1}, {0, 0}, {-1, 1}}},
+        {"WestNorth", {{-2, 0}, {-1, 1}, {0, 0}, {1, 1}}}};
     Orientation m_orientation;
     TetrominoType m_tetromino_type;
 };
