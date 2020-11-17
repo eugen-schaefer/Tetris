@@ -220,6 +220,7 @@ TEST_F(ShapeITest, Initialization) {
     EXPECT_EQ(expected_color, actual_color);
     EXPECT_EQ(expected_position, actual_position);
     EXPECT_EQ(Orientation::north, unit.GetOrientation());
+    EXPECT_EQ(TetrominoType::I, unit.GetTetrominoType());
 }
 
 TEST_F(ShapeITest, RotateClockwiseOnce) {
@@ -324,6 +325,7 @@ TEST_F(ShapeJTest, Initialization) {
     EXPECT_EQ(expected_color, actual_color);
     EXPECT_EQ(expected_position, actual_position);
     EXPECT_EQ(Orientation::north, unit.GetOrientation());
+    EXPECT_EQ(TetrominoType::J, unit.GetTetrominoType());
 }
 
 TEST_F(ShapeJTest, RotateClockwiseOnce) {
@@ -387,6 +389,111 @@ TEST_F(ShapeJTest, RotateClockwiseOnceThreeTimes) {
 }
 
 TEST_F(ShapeJTest, RotateClockwiseOnceFourTimes) {
+    TetrominoPositionType expected_position{init_position};
+
+    // "::testing::_" means that the mock will always return what has been
+    // specified in the Return statement regardless of the input provided
+    // to the mocked RequestSpaceOnGrid
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_, ::testing::_))
+        .WillByDefault(::testing::Return(true));
+
+    unit.Rotate();
+    unit.Rotate();
+    unit.Rotate();
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::north, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+// --------------- Tests for the L-Shape ------------------- //
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ //
+
+class ShapeLTest : public ::testing::Test {
+   protected:
+    ShapeLTest() : unit{grid_logic_mock, init_position} {
+        ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_, ::testing::_))
+            .WillByDefault(::testing::Return(true));
+    };
+
+    TetrominoPositionType init_position{{6, 3}, {7, 1}, {7, 2}, {7, 3}};
+    ShapeL unit;
+    ::testing::NiceMock<GridLogicMock> grid_logic_mock;
+};
+
+TEST_F(ShapeLTest, Initialization) {
+    TetrominoPositionType expected_position{init_position};
+    TetrominoPositionType actual_position = unit.GetPosition();
+    Color expected_color{Color::orange};
+    Color actual_color = unit.GetColor();
+    EXPECT_EQ(expected_color, actual_color);
+    EXPECT_EQ(expected_position, actual_position);
+    EXPECT_EQ(Orientation::north, unit.GetOrientation());
+    EXPECT_EQ(TetrominoType::L, unit.GetTetrominoType());
+}
+
+TEST_F(ShapeLTest, RotateClockwiseOnce) {
+    TetrominoPositionType expected_position{{8, 3}, {6, 2}, {7, 2}, {8, 2}};
+
+    ON_CALL(grid_logic_mock,
+            RequestSpaceOnGrid(init_position, expected_position))
+        .WillByDefault(::testing::Return(true));
+
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::east, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+TEST_F(ShapeLTest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+    TetrominoPositionType expected_position{init_position};
+
+    ON_CALL(grid_logic_mock,
+            RequestSpaceOnGrid(init_position, expected_position))
+        .WillByDefault(::testing::Return(true));
+
+    unit.MakeUnmovable();
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::north, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+TEST_F(ShapeLTest, RotateClockwiseTwice) {
+    TetrominoPositionType expected_position{{8, 1}, {7, 3}, {7, 2}, {7, 1}};
+
+    // "::testing::_" means that the mock will always return what has been
+    // specified in the Return statement regardless of the input provided
+    // to the mocked RequestSpaceOnGrid
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_, ::testing::_))
+        .WillByDefault(::testing::Return(true));
+
+    unit.Rotate();
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::south, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+TEST_F(ShapeLTest, RotateClockwiseOnceThreeTimes) {
+    TetrominoPositionType expected_position{{6, 1}, {6, 2}, {7, 2}, {8, 2}};
+
+    // "::testing::_" means that the mock will always return what has been
+    // specified in the Return statement regardless of the input provided
+    // to the mocked RequestSpaceOnGrid
+    ON_CALL(grid_logic_mock, RequestSpaceOnGrid(::testing::_, ::testing::_))
+        .WillByDefault(::testing::Return(true));
+
+    unit.Rotate();
+    unit.Rotate();
+    unit.Rotate();
+
+    EXPECT_EQ(Orientation::west, unit.GetOrientation());
+    EXPECT_EQ(expected_position, unit.GetPosition());
+}
+
+TEST_F(ShapeLTest, RotateClockwiseOnceFourTimes) {
     TetrominoPositionType expected_position{init_position};
 
     // "::testing::_" means that the mock will always return what has been
