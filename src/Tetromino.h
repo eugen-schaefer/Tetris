@@ -11,13 +11,13 @@
 enum class Direction { left, right, down };
 
 enum class Color {
-    cyan,    // (0x00FFFF)
-    blue,    // (0x0000FF)
-    orange,  // (0xFF8040)
-    yellow,  // (0xFFFF00)
-    green,   // (0x00FF00)
-    purple,  // (0x800080)
-    red      // (0xFF0000)
+    cyan,     // (0x00FFFF)
+    blue,     // (0x0000FF)
+    orange,   // (0xFF8040)
+    yellow,   // (0xFFFF00)
+    green,    // (0x00FF00)
+    magenta,  // (0xFF00FF)
+    red       // (0xFF0000)
 };
 
 enum class TetrominoType { I, J, L, O, S, T, Z, UNDEFINED };
@@ -165,6 +165,25 @@ class ShapeS : public Tetromino {
         {"EastSouth", {{1, -1}, {0, -2}, {0, 0}, {1, 1}}},
         {"SouthWest", {{-1, -1}, {-2, 0}, {0, 0}, {1, -1}}},
         {"WestNorth", {{-1, 1}, {0, 2}, {0, 0}, {-1, -1}}}};
+    Orientation m_orientation;
+    TetrominoType m_tetromino_type;
+};
+
+class ShapeT : public Tetromino {
+   public:
+    ShapeT() = delete;
+    ShapeT(IGridLogic &grid_logic, TetrominoPositionType init_position = {
+                                       {0, 1}, {1, 0}, {1, 1}, {1, 2}});
+    Orientation GetOrientation() { return m_orientation; }
+    void Rotate() override;
+    TetrominoType GetTetrominoType() override { return m_tetromino_type; };
+
+   private:
+    const std::map<std::string, TetrominoPositionType> m_delta_positions{
+        {"NorthEast", {{0, 0}, {0, 2}, {0, 0}, {1, -1}}},
+        {"EastSouth", {{2, 0}, {0, 0}, {0, 0}, {-1, -1}}},
+        {"SouthWest", {{-1, -1}, {1, -1}, {0, 0}, {-1, 1}}},
+        {"WestNorth", {{-1, 1}, {-1, -1}, {0, 0}, {1, 1}}}};
     Orientation m_orientation;
     TetrominoType m_tetromino_type;
 };

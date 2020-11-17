@@ -21,8 +21,8 @@ TetrominoGraphic::TetrominoGraphic(std::unique_ptr<Tetromino> shape,
         case Color::orange:
             tetromino_color = sf::Color(255, 165, 0);
             break;
-        case Color::purple:
-            tetromino_color = sf::Color(128, 0, 128);
+        case Color::magenta:
+            tetromino_color = sf::Color::Magenta;
             break;
         case Color::red:
             tetromino_color = sf::Color::Red;
