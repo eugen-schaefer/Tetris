@@ -9,6 +9,9 @@ GridGraphic::GridGraphic(unsigned int number_rows, unsigned int number_columns,
     m_horizontal_lines = sf::VertexArray(sf::Lines, 2 * (number_rows + 1));
     m_vertical_lines = sf::VertexArray(sf::Lines, 2 * (number_columns + 1));
 
+    sf::Color grid_outline_color{128, 128, 128};
+    sf::Color grid_inline_color{220, 220, 220};
+
     // construct horizontal lines
     m_grid_cell_side_length = grid_height / static_cast<float>(number_rows);
     float grid_width{static_cast<float>(number_columns) *
@@ -20,12 +23,20 @@ GridGraphic::GridGraphic(unsigned int number_rows, unsigned int number_columns,
         // left end of the horizontal line
         m_horizontal_lines[i].position =
             sf::Vector2f(pos_x_left_gridborder, pos_y_next_horizontal_line);
-        m_horizontal_lines[i].color = sf::Color::Blue;
 
         // right end of the horizontal line
         m_horizontal_lines[i + 1].position = sf::Vector2f(
             pos_x_left_gridborder + grid_width, pos_y_next_horizontal_line);
-        m_horizontal_lines[i + 1].color = sf::Color::Red;
+
+        // color the outer lines a bit darker than the inner lines
+        if (i == 0 || i == 2 * number_rows) {
+            m_horizontal_lines[i].color = grid_outline_color;
+            m_horizontal_lines[i + 1].color = grid_outline_color;
+
+        } else {
+            m_horizontal_lines[i].color = grid_inline_color;
+            m_horizontal_lines[i + 1].color = grid_inline_color;
+        }
 
         pos_y_next_horizontal_line += m_grid_cell_side_length;
     }
@@ -37,12 +48,20 @@ GridGraphic::GridGraphic(unsigned int number_rows, unsigned int number_columns,
         // top end of the vertical line
         m_vertical_lines[i].position =
             sf::Vector2f(pos_x_next_vertical_line, pos_y_top_gridborder);
-        m_vertical_lines[i].color = sf::Color::Red;
 
         // bottom end of the vertical line
         m_vertical_lines[i + 1].position = sf::Vector2f(
             pos_x_next_vertical_line, pos_y_top_gridborder + grid_height);
-        m_vertical_lines[i + 1].color = sf::Color::Green;
+
+        // color the outer lines a bit darker than the inner lines
+        if (i == 0 || i == 2 * number_columns) {
+            m_vertical_lines[i].color = grid_outline_color;
+            m_vertical_lines[i + 1].color = grid_outline_color;
+
+        } else {
+            m_vertical_lines[i].color = grid_inline_color;
+            m_vertical_lines[i + 1].color = grid_inline_color;
+        }
 
         pos_x_next_vertical_line += m_grid_cell_side_length;
     }

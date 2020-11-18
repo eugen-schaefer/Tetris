@@ -346,7 +346,6 @@ void PlayGround::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         target.draw(m_game_over_text, states);
         target.draw(m_start_new_game_text, states);
     } else {
-        target.draw(m_grid_graphic, states);
         if (m_active_shape) {
             target.draw(*m_active_shape, states);
         }
@@ -355,6 +354,7 @@ void PlayGround::draw(sf::RenderTarget& target, sf::RenderStates states) const {
                 target.draw(*graphical_shape);
             }
         }
+        target.draw(m_grid_graphic, states);
         target.draw(m_dashboard);
     }
 }

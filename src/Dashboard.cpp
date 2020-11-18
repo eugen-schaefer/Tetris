@@ -13,10 +13,10 @@ Dashboard::Dashboard(float offset_window_top_border, float max_available_width,
     constexpr unsigned int kOutlineThickness{2};
     constexpr unsigned int kLabelCharacterSize{30};
     constexpr unsigned int kNumberSize{50};
+    const sf::Color kNumberColor{sf::Color::Black};
     const sf::Color kLabelColor{sf::Color::Blue};
-    const sf::Color kNumberColor{sf::Color::Blue};
-    const sf::Color kQueueBorderColor{sf::Color::Red};
-    const sf::Color kScoringBorderColor{sf::Color::Red};
+    const sf::Color kQueueBorderColor{sf::Color(128, 128, 128)};
+    const sf::Color kScoringBorderColor{sf::Color(128, 128, 128)};
 
     // dashboard related details
     float relative_width_utilization{0.6};
@@ -226,9 +226,8 @@ void Dashboard::draw(sf::RenderTarget &target, sf::RenderStates states) const {
     target.draw(m_cleared_lines_label1, states);
     target.draw(m_cleared_lines_label2, states);
     target.draw(m_cleared_lines_number, states);
-    target.draw(m_dashboard_grid_graphic, states);
-
     for (auto &elem : m_shapes_in_queue) {
         target.draw(elem, states);
     }
+    target.draw(m_dashboard_grid_graphic, states);
 }
