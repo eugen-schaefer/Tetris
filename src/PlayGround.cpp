@@ -2,24 +2,61 @@
 
 #include <SFML/Graphics.hpp>
 #include <algorithm>
+#include <random>
 
-class ShapeFactory {
+class RandomShapeFactory {
    public:
     static std::unique_ptr<TetrominoGraphic> create(GridLogic& grid_logic,
                                                     GridGraphic& grid_graphic) {
-        // TODO(Eugen): workarround for the start, consider random generation
-        // here
-        // TetrominoPositionType init_position = {{0, 3}, {0, 4}, {0, 5}, {0, 6}};  //ShapeI
-        // TetrominoPositionType init_position = {{0, 3}, {1, 3}, {1, 4}, {1, 5}};  //ShapeJ
-        // TetrominoPositionType init_position = {{0, 5}, {1, 3}, {1, 4}, {1, 5}};  // ShapeL
-        // TetrominoPositionType init_position = {{0, 4}, {0, 5}, {1, 5}, {1, 4}};  // ShapeO
-        // TetrominoPositionType init_position = {{0, 4}, {0, 5}, {1, 4}, {1, 3}};  // ShapeS
-        // TetrominoPositionType init_position = {{0, 4}, {1, 3}, {1, 4}, {1, 5}};  // ShapeT
-        TetrominoPositionType init_position = {{0, 3}, {0, 4}, {1, 4}, {1, 5}};  // ShapeT
-        std::unique_ptr<TetrominoGraphic> m_active_graphic_shape_ptr =
-            std::make_unique<TetrominoGraphic>(
-                std::make_unique<ShapeZ>(grid_logic, init_position),
-                grid_graphic);
+        TetrominoPositionType init_position;
+        std::unique_ptr<TetrominoGraphic> m_active_graphic_shape_ptr;
+        std::random_device rnd_dev;
+        std::mt19937 mt_engine(rnd_dev());
+        std::uniform_int_distribution<> generate_number(1, 7);
+        switch (generate_number(mt_engine)) {
+            case 1:  // create an I-Shape
+                init_position = {{0, 3}, {0, 4}, {0, 5}, {0, 6}};
+                m_active_graphic_shape_ptr = std::make_unique<TetrominoGraphic>(
+                    std::make_unique<ShapeI>(grid_logic, init_position),
+                    grid_graphic);
+                break;
+            case 2:  // create an J-Shape
+                init_position = {{0, 3}, {1, 3}, {1, 4}, {1, 5}};
+                m_active_graphic_shape_ptr = std::make_unique<TetrominoGraphic>(
+                    std::make_unique<ShapeJ>(grid_logic, init_position),
+                    grid_graphic);
+                break;
+            case 3:  // create an L-Shape
+                init_position = {{0, 5}, {1, 3}, {1, 4}, {1, 5}};
+                m_active_graphic_shape_ptr = std::make_unique<TetrominoGraphic>(
+                    std::make_unique<ShapeL>(grid_logic, init_position),
+                    grid_graphic);
+                break;
+            case 4:  // create an O-Shape
+                init_position = {{0, 4}, {0, 5}, {1, 5}, {1, 4}};
+                m_active_graphic_shape_ptr = std::make_unique<TetrominoGraphic>(
+                    std::make_unique<ShapeO>(grid_logic, init_position),
+                    grid_graphic);
+                break;
+            case 5:  // create an S-Shape
+                init_position = {{0, 4}, {0, 5}, {1, 4}, {1, 3}};
+                m_active_graphic_shape_ptr = std::make_unique<TetrominoGraphic>(
+                    std::make_unique<ShapeS>(grid_logic, init_position),
+                    grid_graphic);
+                break;
+            case 6:  // create an T-Shape
+                init_position = {{0, 4}, {1, 3}, {1, 4}, {1, 5}};
+                m_active_graphic_shape_ptr = std::make_unique<TetrominoGraphic>(
+                    std::make_unique<ShapeT>(grid_logic, init_position),
+                    grid_graphic);
+                break;
+            case 7:  // create an Z-Shape
+                init_position = {{0, 3}, {0, 4}, {1, 4}, {1, 5}};
+                m_active_graphic_shape_ptr = std::make_unique<TetrominoGraphic>(
+                    std::make_unique<ShapeZ>(grid_logic, init_position),
+                    grid_graphic);
+                break;
+        }
         return std::move(m_active_graphic_shape_ptr);
     }
 };
@@ -139,8 +176,8 @@ void PlayGround::ProcessLockDown() {
             m_frozen_shapes_on_grid.push_back(std::move(m_active_shape));
             m_active_shape = std::move(m_shapes_in_queue.back());
             m_shapes_in_queue.pop_back();
-            m_shapes_in_queue.push_front(
-                std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+            m_shapes_in_queue.push_front(std::move(
+                RandomShapeFactory::create(m_grid_logic, m_grid_graphic)));
             m_dashboard.InsertNextTetromino(
                 m_shapes_in_queue.at(0)->GetTetrominoType());
 
@@ -285,15 +322,15 @@ void PlayGround::StartNewGame() {
 
     // generate three random shapes and put them all in a queue
     m_shapes_in_queue.push_front(
-        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+        std::move(RandomShapeFactory::create(m_grid_logic, m_grid_graphic)));
     m_shapes_in_queue.push_front(
-        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+        std::move(RandomShapeFactory::create(m_grid_logic, m_grid_graphic)));
     m_shapes_in_queue.push_front(
-        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic)));
+        std::move(RandomShapeFactory::create(m_grid_logic, m_grid_graphic)));
 
     // generate a shape being actively moved on the grid
     m_active_shape =
-        std::move(ShapeFactory::create(m_grid_logic, m_grid_graphic));
+        std::move(RandomShapeFactory::create(m_grid_logic, m_grid_graphic));
 
     // insert all elements from m_shapes_in_queue into the dashboard queue
     m_dashboard.InsertNextTetromino(
