@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "Game.h"
 
 int main() {
@@ -10,6 +8,6 @@ int main() {
         Game game(window, font);
         game.start(window);
     }
-    
+
     return EXIT_SUCCESS;
 }
