@@ -3,6 +3,22 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+TEST(TetrominoPositionTypeOperatorOverloading, SuccessWhileAddingTwoPositions) {
+    TetrominoPositionType operand1{{1, 2}, {3, 4}, {5, 6}, {7, 8}};
+    TetrominoPositionType operand2{{9, 8}, {7, 6}, {5, 4}, {3, 2}};
+    TetrominoPositionType expected_addition_result{
+        {10, 10}, {10, 10}, {10, 10}, {10, 10}};
+    TetrominoPositionType actual_addition_result{operand1 + operand2};
+    EXPECT_EQ(expected_addition_result, actual_addition_result);
+}
+
+TEST(TetrominoPositionTypeOperatorOverloadingDeathTest,
+     NoSuccessWhileAddingTwoPositionsBecauseOfDifferentDimensions) {
+    TetrominoPositionType operand1{{1, 2}, {7, 8}};
+    TetrominoPositionType operand2{{9, 8}, {7, 6}, {5, 4}};
+    EXPECT_DEATH(operand1 + operand2, "");
+}
+
 class GridLogicMock : public IGridLogic {
    public:
     GridLogicMock() : IGridLogic(){};
@@ -156,6 +172,18 @@ TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfMovabilityFreeze) {
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_FALSE(result.is_move_successfull);
+    EXPECT_EQ(result.expected_targed_position, actual_position);
+}
+
+TEST_F(TetrominoTest, MoveDownPossibleBecauseOfMovabilityUnfreeze) {
+    unit.MakeUnmovable();
+    EXPECT_FALSE(unit.IsMovable());
+
+    unit.MakeMovable();
+    EXPECT_TRUE(unit.IsMovable());
+    auto result = MoveTetrominoIfPossible(init_position, Direction::down,
+                                          kTargetPositionFree);
+    TetrominoPositionType actual_position = unit.GetPosition();
     EXPECT_EQ(result.expected_targed_position, actual_position);
 }
 

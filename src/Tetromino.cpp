@@ -1,9 +1,10 @@
 #include "Tetromino.h"
 
+#include <cassert>
+
 TetrominoPositionType operator+(const TetrominoPositionType &position1,
                                 const TetrominoPositionType &position2) {
-    // TODO: static_assert(position1.size() == position2.size(), "The size of
-    // the lhs and rhs of the + operator must match!");
+    assert(position1.size() == position2.size());
 
     TetrominoPositionType result{{0, 0}, {0, 0}, {0, 0}, {0, 0}};
     for (int idx{0}; idx < result.size(); ++idx) {

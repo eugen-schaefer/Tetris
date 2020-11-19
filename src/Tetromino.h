@@ -48,9 +48,7 @@ class Tetromino {
     virtual bool MoveOneStep(Direction);
     virtual bool IsMovable() const { return m_is_movable; }
     virtual void MakeUnmovable() { m_is_movable = false; };
-    virtual void MakeMovable() {
-        m_is_movable = true;
-    };  // TODO(Eugen): add missing tests
+    virtual void MakeMovable() { m_is_movable = true; };
     virtual void Rotate() {}
     virtual void DeleteTetrominoSquare(
         LogicalSquaresIteratorType &logical_iterator);

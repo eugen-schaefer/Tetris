@@ -16,7 +16,7 @@ class GridLogic : public IGridLogic {
     bool RequestSpaceOnGrid(TetrominoPositionType current_position,
                             TetrominoPositionType target_position) override;
     void FreeAllEntirelyOccupiedRows();
-    void FreeEntireGrid(); //TODO(Eugen): write missing tests
+    void FreeEntireGrid();
 
    private:
     int m_number_columns;

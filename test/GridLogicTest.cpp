@@ -336,3 +336,32 @@ TEST_F(GridLogicTest, FreeOneEntirelyOccupiedRow) {
     EXPECT_TRUE(actual_indexes_of_occupied_rows.empty());
     EXPECT_EQ(expected_grid, actual_grid);
 }
+
+TEST_F(GridLogicTest, FreeEntireGrid) {
+    // Occupy some randomly selected cells
+    TetrominoPositionType any_position{{1, 0}, {3, 4}, {5, 2}, {6, 7}};
+    bool actual_result = unit.RequestSpaceOnGrid(any_position, any_position);
+    EXPECT_TRUE(actual_result);
+
+    // Occupy the first bottom row
+    OccupyEntireRow(number_rows - 1);
+    EXPECT_EQ(std::vector<int>{number_rows - 1},
+              unit.GetIndexesOfFullyOccupiedRows());
+
+    // construct expected grid
+    std::vector<std::vector<bool>> expected_grid;
+    expected_grid.resize(number_rows);
+    for (auto& row : expected_grid) {
+        row.resize(number_columns);
+    }
+    for (int row_idx{0}; row_idx < number_rows; ++row_idx) {
+        for (int col_idx{0}; col_idx < number_columns; ++col_idx) {
+            expected_grid.at(row_idx).at(col_idx) = false;
+        }
+    }
+
+    unit.FreeEntireGrid();
+    std::vector<std::vector<bool>> actual_grid = unit.GetOccupancyGrid();
+
+    EXPECT_EQ(expected_grid, actual_grid);
+}
