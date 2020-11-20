@@ -55,7 +55,7 @@ class TetrominoTest : public ::testing::Test {
         MoveTetrominoReturnValueType returnValue;
         returnValue.is_move_successfull = false;
         returnValue.expected_targed_position = current_position;
-        if (!unit.IsMovable()) {
+        if (unit.IsLocked()) {
             return returnValue;
         }
 
@@ -116,8 +116,8 @@ TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfOccupiedTargetRegion) {
     EXPECT_NE(result.expected_targed_position, actual_position);
 }
 
-TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfMovabilityFreeze) {
-    unit.MakeUnmovable();
+TEST_F(TetrominoTest, MoveToTheRightImpossibleBecauseOfLockDown) {
+    unit.LockDown();
     auto result = MoveTetrominoIfPossible(init_position, Direction::right,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -141,8 +141,8 @@ TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfOccupiedTargetRegion) {
     EXPECT_NE(result.expected_targed_position, actual_position);
 }
 
-TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfMovabilityFreeze) {
-    unit.MakeUnmovable();
+TEST_F(TetrominoTest, MoveToTheLeftImpossibleBecauseOfLockDown) {
+    unit.LockDown();
     auto result = MoveTetrominoIfPossible(init_position, Direction::left,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -166,8 +166,8 @@ TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfOccupiedTargetRegion) {
     EXPECT_NE(result.expected_targed_position, actual_position);
 }
 
-TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfMovabilityFreeze) {
-    unit.MakeUnmovable();
+TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfLockDown) {
+    unit.LockDown();
     auto result = MoveTetrominoIfPossible(init_position, Direction::down,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -175,12 +175,12 @@ TEST_F(TetrominoTest, MoveDownImpossibleBecauseOfMovabilityFreeze) {
     EXPECT_EQ(result.expected_targed_position, actual_position);
 }
 
-TEST_F(TetrominoTest, MoveDownPossibleBecauseOfMovabilityUnfreeze) {
-    unit.MakeUnmovable();
-    EXPECT_FALSE(unit.IsMovable());
+TEST_F(TetrominoTest, MoveDownPossibleBecauseOfUnlocking) {
+    unit.LockDown();
+    EXPECT_TRUE(unit.IsLocked());
 
-    unit.MakeMovable();
-    EXPECT_TRUE(unit.IsMovable());
+    unit.Release();
+    EXPECT_FALSE(unit.IsLocked());
     auto result = MoveTetrominoIfPossible(init_position, Direction::down,
                                           kTargetPositionFree);
     TetrominoPositionType actual_position = unit.GetPosition();
@@ -262,14 +262,14 @@ TEST_F(ShapeITest, RotateClockwiseOnce) {
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
 
-TEST_F(ShapeITest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+TEST_F(ShapeITest, RotateClockwiseOnceNotPossibleBecauseOfLockDown) {
     TetrominoPositionType expected_position{init_position};
 
     ON_CALL(grid_logic_mock,
             RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
-    unit.MakeUnmovable();
+    unit.LockDown();
     unit.Rotate();
 
     EXPECT_EQ(Orientation::north, unit.GetOrientation());
@@ -366,14 +366,14 @@ TEST_F(ShapeJTest, RotateClockwiseOnce) {
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
 
-TEST_F(ShapeJTest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+TEST_F(ShapeJTest, RotateClockwiseOnceNotPossibleBecauseOfLockDown) {
     TetrominoPositionType expected_position{init_position};
 
     ON_CALL(grid_logic_mock,
             RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
-    unit.MakeUnmovable();
+    unit.LockDown();
     unit.Rotate();
 
     EXPECT_EQ(Orientation::north, unit.GetOrientation());
@@ -470,14 +470,14 @@ TEST_F(ShapeLTest, RotateClockwiseOnce) {
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
 
-TEST_F(ShapeLTest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+TEST_F(ShapeLTest, RotateClockwiseOnceNotPossibleBecauseOfLockDown) {
     TetrominoPositionType expected_position{init_position};
 
     ON_CALL(grid_logic_mock,
             RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
-    unit.MakeUnmovable();
+    unit.LockDown();
     unit.Rotate();
 
     EXPECT_EQ(Orientation::north, unit.GetOrientation());
@@ -574,14 +574,14 @@ TEST_F(ShapeOTest, RotateClockwiseOnce) {
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
 
-TEST_F(ShapeOTest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+TEST_F(ShapeOTest, RotateClockwiseOnceNotPossibleBecauseOfLockDown) {
     TetrominoPositionType expected_position{init_position};
 
     ON_CALL(grid_logic_mock,
             RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
-    unit.MakeUnmovable();
+    unit.LockDown();
     unit.Rotate();
 
     EXPECT_EQ(Orientation::north, unit.GetOrientation());
@@ -678,14 +678,14 @@ TEST_F(ShapeSTest, RotateClockwiseOnce) {
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
 
-TEST_F(ShapeSTest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+TEST_F(ShapeSTest, RotateClockwiseOnceNotPossibleBecauseOfLockDown) {
     TetrominoPositionType expected_position{init_position};
 
     ON_CALL(grid_logic_mock,
             RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
-    unit.MakeUnmovable();
+    unit.LockDown();
     unit.Rotate();
 
     EXPECT_EQ(Orientation::north, unit.GetOrientation());
@@ -782,14 +782,14 @@ TEST_F(ShapeTTest, RotateClockwiseOnce) {
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
 
-TEST_F(ShapeTTest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+TEST_F(ShapeTTest, RotateClockwiseOnceNotPossibleBecauseOfLockDown) {
     TetrominoPositionType expected_position{init_position};
 
     ON_CALL(grid_logic_mock,
             RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
-    unit.MakeUnmovable();
+    unit.LockDown();
     unit.Rotate();
 
     EXPECT_EQ(Orientation::north, unit.GetOrientation());
@@ -886,14 +886,14 @@ TEST_F(ShapeZTest, RotateClockwiseOnce) {
     EXPECT_EQ(expected_position, unit.GetPosition());
 }
 
-TEST_F(ShapeZTest, RotateClockwiseOnceNotPossibleBecauseOfMovabilityFreeze) {
+TEST_F(ShapeZTest, RotateClockwiseOnceNotPossibleBecauseOfLockDown) {
     TetrominoPositionType expected_position{init_position};
 
     ON_CALL(grid_logic_mock,
             RequestSpaceOnGrid(init_position, expected_position))
         .WillByDefault(::testing::Return(true));
 
-    unit.MakeUnmovable();
+    unit.LockDown();
     unit.Rotate();
 
     EXPECT_EQ(Orientation::north, unit.GetOrientation());

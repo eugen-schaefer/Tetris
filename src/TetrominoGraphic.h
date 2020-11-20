@@ -16,11 +16,11 @@ class TetrominoGraphic : public sf::Drawable {
 
     bool MoveOneStep(Direction direction);
     void Rotate();
-    bool IsMovable() const { return m_shape->IsMovable(); }
+    bool IsLocked() const { return m_shape->IsLocked(); }
     void DeleteTetrominoSquare(GraphicalSquaresIteratorType& graphical_iterator,
                                LogicalSquaresIteratorType& logical_iterator);
-    void MakeMovable() { m_shape->MakeMovable(); };
-    void MakeUnmovable() { m_shape->MakeUnmovable(); };
+    void LockDown() { m_shape->LockDown(); };
+    void Release() { m_shape->Release(); };
     LogicalSquaresIteratorType GetIteratorToBeginOfLogicalTetromino() {
         return m_shape->GetIteratorToBeginOfPositionVector();
     };

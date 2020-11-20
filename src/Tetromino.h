@@ -73,18 +73,16 @@ class Tetromino {
     virtual bool MoveOneStep(Direction direction);
 
     /// Determines whether the tetronimo is locked down or not
-    /// \return true if tetromino is movable because not locked down, false in
-    /// case the tetromino is locked down
-    virtual bool IsMovable() const {
-        return m_is_movable;
-    }  // TODO(Eugen): rename the method to IsLockedDown and adapt the usages
-       // everywhere the method is used
+    /// \return true if tetromino is locked down and hence unmovable, false
+    /// otherwise
+    virtual bool IsLocked() const { return m_is_locked; }
 
-    // TODO:(Eugen): Rename to Lock, then document the function accordingly
-    virtual void MakeUnmovable() { m_is_movable = false; };
+    /// Lock tetromino such that it cant be moved or rotated.
+    virtual void LockDown() { m_is_locked = true; };
 
-    // TODO:(Eugen): Rename to Unlock, then document the function accordingly
-    virtual void MakeMovable() { m_is_movable = true; };
+    /// Unlock tetromino such that it can be moved or rotated.
+    virtual void Release() { m_is_locked = false; };
+
     virtual void Rotate() {}
 
     /// Deletes one specified square within the tetromino initially consisting
@@ -111,13 +109,14 @@ class Tetromino {
 
    private:
     Color m_color;
-    // m_is_movable indicates whether the tetromino can be moved or not. When
-    // the object is instantiated, the m_is_movable is true and consequently
+
+    // m_is_locked indicates whether the tetromino can be moved or not. When
+    // the object is instantiated, the m_is_locked is false and consequently
     // the tetromino can be moved. Once tetromino has riched the lowest obstacle
     // (be it the lower grid bound or other tetrominos located already at the
-    // bottom of the grid) m_is_movable is switched to false and hence the
-    // tetromino can't be moved anymore.
-    bool m_is_movable;  // TODO(Eugen): rename the var to m_is_locked_down
+    // bottom of the grid) m_is_locked is switched to true and hence the
+    // tetromino can't be moved anymore because it's locked down.
+    bool m_is_locked;
 };
 
 /// The ShapeI class represents concrete shape I. Apart from inherited methods,

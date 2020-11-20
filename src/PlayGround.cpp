@@ -172,7 +172,7 @@ void PlayGround::ProcessLockDown() {
         // generate a new shape and put it in front of m_shapes_in_queue and pop
         // a shape from the back of the m_shapes_in_queue. Finally, check
         // occupancy grid for entirely occupied rows and clear them all if any.
-        if (!m_active_shape->IsMovable()) {
+        if (m_active_shape->IsLocked()) {
             m_frozen_shapes_on_grid.push_back(std::move(m_active_shape));
             m_active_shape = std::move(m_shapes_in_queue.back());
             m_shapes_in_queue.pop_back();
@@ -231,10 +231,10 @@ void PlayGround::ProcessLockDown() {
                 // Unlock the movability of each tetromino on the grid, move
                 // each one down until it hits an obstacle and lock it again
                 for (auto& shape : m_frozen_shapes_on_grid) {
-                    shape->MakeMovable();
+                    shape->Release();
                     while (shape->MoveOneStep(Direction::down)) {
                     }
-                    shape->MakeUnmovable();
+                    shape->LockDown();
                 }
 
                 // update the score

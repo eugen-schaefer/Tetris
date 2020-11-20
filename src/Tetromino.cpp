@@ -21,10 +21,10 @@ Tetromino::Tetromino(IGridLogic &grid_logic,
     : m_grid_logic{grid_logic},
       m_position{init_position},
       m_color{color},
-      m_is_movable{true} {};
+      m_is_locked{false} {};
 
 bool Tetromino::MoveOneStep(Direction direction) {
-    if (!IsMovable()) {
+    if (IsLocked()) {
         return false;
     }
 
@@ -56,7 +56,7 @@ bool Tetromino::MoveOneStep(Direction direction) {
         // before locking. This waiting time would allow to horizontally move
         // the shape at the lowest possible level for the specified amount of
         // time before is is frozen forever.
-        MakeUnmovable();
+        LockDown();
         is_movement_succeed = false;
     }
     return is_movement_succeed;
@@ -78,7 +78,7 @@ ShapeI::ShapeI(IGridLogic &grid_logic, TetrominoPositionType init_position)
       m_tetromino_type{TetrominoType::I} {}
 
 void ShapeI::Rotate() {
-    if (!IsMovable()) {
+    if (IsLocked()) {
         return;
     }
 
@@ -132,7 +132,7 @@ ShapeJ::ShapeJ(IGridLogic &grid_logic, TetrominoPositionType init_position)
       m_tetromino_type{TetrominoType::J} {}
 
 void ShapeJ::Rotate() {
-    if (!IsMovable()) {
+    if (IsLocked()) {
         return;
     }
 
@@ -186,7 +186,7 @@ ShapeL::ShapeL(IGridLogic &grid_logic, TetrominoPositionType init_position)
       m_tetromino_type{TetrominoType::L} {}
 
 void ShapeL::Rotate() {
-    if (!IsMovable()) {
+    if (IsLocked()) {
         return;
     }
 
@@ -249,7 +249,7 @@ ShapeS::ShapeS(IGridLogic &grid_logic, TetrominoPositionType init_position)
       m_tetromino_type{TetrominoType::S} {}
 
 void ShapeS::Rotate() {
-    if (!IsMovable()) {
+    if (IsLocked()) {
         return;
     }
 
@@ -303,7 +303,7 @@ ShapeT::ShapeT(IGridLogic &grid_logic, TetrominoPositionType init_position)
       m_tetromino_type{TetrominoType::T} {}
 
 void ShapeT::Rotate() {
-    if (!IsMovable()) {
+    if (IsLocked()) {
         return;
     }
 
@@ -357,7 +357,7 @@ ShapeZ::ShapeZ(IGridLogic &grid_logic, TetrominoPositionType init_position)
       m_tetromino_type{TetrominoType::Z} {}
 
 void ShapeZ::Rotate() {
-    if (!IsMovable()) {
+    if (IsLocked()) {
         return;
     }
 
