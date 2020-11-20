@@ -31,38 +31,81 @@ using LogicalSquaresIteratorType = TetrominoPositionType::iterator;
 TetrominoPositionType operator+(const TetrominoPositionType &position1,
                                 const TetrominoPositionType &position2);
 
+/// Tetromino class is the base class for all seven tetromino shapes. It
+/// provides common properties like color and actions like a move in a certain
+/// direction for all shapes.
 class Tetromino {
    public:
+    /// No default constructor provided to enforce creating shapes with a fixed
+    /// number of squares.
     Tetromino() = delete;
+
+    /// Creates a tetromino consisting of exactly four squares clearly
+    /// determined by their positions in the grid.
+    /// \param grid_logic:    a reference to the logical grid to determine
+    ///                       tetrominoes' unambiguous position in the grid.
+    /// \param init_position: unambiguous position in the grid where the created
+    ///                       tetromino is initially placed.
     Tetromino(IGridLogic &grid_logic, TetrominoPositionType init_position,
               Color color);
+
+    /// Retrieves tetrominoes' color.
+    /// \return tetrominoes' color
     virtual Color GetColor() const { return m_color; }
+
+    /// Retrieves tetrominoes' position.
+    /// \return position of every tetromino square
     virtual TetrominoPositionType GetPosition() const { return m_position; }
-    // This method is supposed to be used only to set tetrominos in the
-    // dashboard. Since SetPositionInDashboard() places shapes on the grid
-    // regardless of the grid occupancy on the corresponding place,
-    // the MoveOneStep() shall be used for game usage instead.
-    virtual void SetPositionInDashboard(TetrominoPositionType position) {
-        m_position = position;
+
+    /// SetPositionInDashboard is supposed to be used only to set the tetromino
+    /// in the dashboard. Since SetPosition() places shapes on the grid
+    /// regardless of the grid occupancy at the corresponding place, the
+    /// MoveOneStep() shall be used for game usage instead.
+    /// \param target_position: Position in the logical grid at which the
+    ///                         Tetromino is to be placed.
+    virtual void SetPosition(TetrominoPositionType target_position) {
+        m_position = std::move(target_position);
     }
-    virtual bool MoveOneStep(Direction);
-    virtual bool IsMovable() const { return m_is_movable; }
+
+    /// Moves the tetromino one step towards a specified direction
+    /// \param direction: direction towards which the movement shall take place.
+    /// \return returns true when the movement was successful, false otherwise.
+    virtual bool MoveOneStep(Direction direction);
+
+    /// Determines whether the tetronimo is locked down or not
+    /// \return true if tetromino is movable because not locked down, false in
+    /// case the tetromino is locked down
+    virtual bool IsMovable() const {
+        return m_is_movable;
+    }  // TODO(Eugen): rename the method to IsLockedDown and adapt the usages
+       // everywhere the method is used
+
+    // TODO:(Eugen): Rename to Lock, then document the function accordingly
     virtual void MakeUnmovable() { m_is_movable = false; };
+
+    // TODO:(Eugen): Rename to Unlock, then document the function accordingly
     virtual void MakeMovable() { m_is_movable = true; };
     virtual void Rotate() {}
+
+    /// Deletes one specified square within the tetromino initially consisting
+    /// of four squares. This function is supposed to be used in line clearing
+    /// cases.
+    /// \param logical_iterator: iterator to the square being deleted
     virtual void DeleteTetrominoSquare(
         LogicalSquaresIteratorType &logical_iterator);
+
+    /// Retrieved the iterator to tetrominoes first square.
     virtual LogicalSquaresIteratorType GetIteratorToBeginOfPositionVector() {
         return m_position.begin();
     };
+
+    /// Retrieves the information about the concrete shape. Since the base class
+    /// is not meant to represent a concrete shape, its type is undefined.
     virtual TetrominoType GetTetrominoType() {
         return TetrominoType::UNDEFINED;
     };
 
    protected:
-    void SetPosition(TetrominoPositionType position) {
-        m_position = std::move(position);
-    }
     TetrominoPositionType m_position;
     IGridLogic &m_grid_logic;
 
@@ -74,9 +117,11 @@ class Tetromino {
     // (be it the lower grid bound or other tetrominos located already at the
     // bottom of the grid) m_is_movable is switched to false and hence the
     // tetromino can't be moved anymore.
-    bool m_is_movable;
+    bool m_is_movable;  // TODO(Eugen): rename the var to m_is_locked_down
 };
 
+/// The ShapeI class represents concrete shape I. Apart from inherited methods,
+/// it provides in addition a concrete implementation of the shape rotation.
 class ShapeI : public Tetromino {
    public:
     ShapeI() = delete;
@@ -96,6 +141,8 @@ class ShapeI : public Tetromino {
     TetrominoType m_tetromino_type;
 };
 
+/// The ShapeJ class represents concrete shape J. Apart from inherited methods,
+/// it provides in addition a concrete implementation of the shape rotation.
 class ShapeJ : public Tetromino {
    public:
     ShapeJ() = delete;
@@ -115,6 +162,8 @@ class ShapeJ : public Tetromino {
     TetrominoType m_tetromino_type;
 };
 
+/// The ShapeL class represents concrete shape L. Apart from inherited methods,
+/// it provides in addition a concrete implementation of the shape rotation.
 class ShapeL : public Tetromino {
    public:
     ShapeL() = delete;
@@ -134,6 +183,8 @@ class ShapeL : public Tetromino {
     TetrominoType m_tetromino_type;
 };
 
+/// The ShapeO class represents concrete shape O. Apart from inherited methods,
+/// it provides in addition a concrete implementation of the shape rotation.
 class ShapeO : public Tetromino {
    public:
     ShapeO() = delete;
@@ -148,6 +199,8 @@ class ShapeO : public Tetromino {
     TetrominoType m_tetromino_type;
 };
 
+/// The ShapeS class represents concrete shape S. Apart from inherited methods,
+/// it provides in addition a concrete implementation of the shape rotation.
 class ShapeS : public Tetromino {
    public:
     ShapeS() = delete;
@@ -167,6 +220,8 @@ class ShapeS : public Tetromino {
     TetrominoType m_tetromino_type;
 };
 
+/// The ShapeT class represents concrete shape T. Apart from inherited methods,
+/// it provides in addition a concrete implementation of the shape rotation.
 class ShapeT : public Tetromino {
    public:
     ShapeT() = delete;
@@ -186,6 +241,8 @@ class ShapeT : public Tetromino {
     TetrominoType m_tetromino_type;
 };
 
+/// The ShapeZ class represents concrete shape Z. Apart from inherited methods,
+/// it provides in addition a concrete implementation of the shape rotation.
 class ShapeZ : public Tetromino {
    public:
     ShapeZ() = delete;

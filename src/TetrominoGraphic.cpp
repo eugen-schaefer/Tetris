@@ -77,7 +77,7 @@ void TetrominoGraphic::DeleteTetrominoSquare(
 }
 
 void TetrominoGraphic::SetPositionInDashboard(TetrominoPositionType position) {
-    m_shape->SetPositionInDashboard(position);
+    m_shape->SetPosition(position);
     UpdatePosition();
 }
 
