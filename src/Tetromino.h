@@ -83,6 +83,7 @@ class Tetromino {
     /// Unlock tetromino such that it can be moved or rotated.
     virtual void Release() { m_is_locked = false; };
 
+    /// Rotates the concrete shape clockwise
     virtual void Rotate() {}
 
     /// Deletes one specified square within the tetromino initially consisting

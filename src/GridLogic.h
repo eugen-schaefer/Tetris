@@ -10,7 +10,9 @@
 /// The GridLogic class keeps track of the playfield, which is a grid into which
 /// the tetrominoes are falling. So the class determines whether the active
 /// figure can be moved or rotated in the grid or not. The associated grid is
-/// also referred to as the logical grid.
+/// also referred to as the logical grid. The x-axis is vertical and counts
+/// positive from top to bottom whereas the y-axis is horizontal counting
+/// positive from left to right.
 class GridLogic : public IGridLogic {
    public:
     /// Constructs a playfield as a grid

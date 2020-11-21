@@ -6,6 +6,10 @@
 GridGraphic::GridGraphic(unsigned int number_rows, unsigned int number_columns,
                          float pos_x_top_left_corner,
                          float pos_y_top_left_corner, float grid_height) {
+    // a line is specified by two endpoints, a grid contains number_rows rows
+    // which results in (number_rows + 1) horizontal lines and hence in 2 *
+    // (number_rows + 1) endpoints. The same thought applies to vertical lines
+    // as well.
     m_horizontal_lines = sf::VertexArray(sf::Lines, 2 * (number_rows + 1));
     m_vertical_lines = sf::VertexArray(sf::Lines, 2 * (number_columns + 1));
 
