@@ -1,11 +1,11 @@
-#include "Game.h"
+#include "Controller.h"
 
 #include <chrono>
 #include <thread>
 
 #include "GridGraphic.h"
 
-Game::Game(sf::RenderWindow& window, sf::Font& font)
+Controller::Controller(sf::RenderWindow& window, sf::Font& font)
     : m_play_ground{PlayGround(m_number_rows, m_number_columns, window, font)} {
     // Center the main window
     auto desktop = sf::VideoMode::getDesktopMode();
@@ -15,7 +15,7 @@ Game::Game(sf::RenderWindow& window, sf::Font& font)
     window.setPosition(new_position);
 }
 
-void Game::start(sf::RenderWindow& window) {
+void Controller::StartGame(sf::RenderWindow& window) {
     // Start the game loop
     auto time_stamp_since_last_update{std::chrono::system_clock::now()};
     long duration_ms_for_one_step_drop{700};
