@@ -11,7 +11,7 @@ class Controller {
    private:
     int m_number_rows{20};
     int m_number_columns{10};
-    Game m_play_ground;
+    Game m_game;
 };
 
 #endif /* CONTROLLER_H_ */

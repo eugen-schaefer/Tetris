@@ -136,7 +136,7 @@ Game::Game(int number_grid_rows, int number_grid_columns,
     StartNewGame();
 }
 
-void Game::ProcessKeyEvents(sf::Event event) {
+void Game::ProcessKeyEvent(sf::Event event) {
     if (m_active_shape) {
         // process keyboard event for the active shape
         if ((event.type == sf::Event::KeyPressed) &&

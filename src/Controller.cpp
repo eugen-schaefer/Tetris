@@ -6,7 +6,7 @@
 #include "GridGraphic.h"
 
 Controller::Controller(sf::RenderWindow& window, sf::Font& font)
-    : m_play_ground{Game(m_number_rows, m_number_columns, window, font)} {
+    : m_game{Game(m_number_rows, m_number_columns, window, font)} {
     // Center the main window
     auto desktop = sf::VideoMode::getDesktopMode();
     sf::Vector2<int> new_position{
@@ -30,10 +30,10 @@ void Controller::StartGame(sf::RenderWindow& window) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             };
-            m_play_ground.ProcessKeyEvents(event);
+            m_game.ProcessKeyEvent(event);
         }
 
-        if (!m_play_ground.IsGameOver()) {
+        if (!m_game.IsGameOver()) {
             long elapsed_time_since_last_update =
                 std::chrono::duration_cast<std::chrono::milliseconds>(
                     std::chrono::system_clock::now() -
@@ -43,30 +43,30 @@ void Controller::StartGame(sf::RenderWindow& window) {
             // Perfom periodic drop of the active shape
             if (elapsed_time_since_last_update >=
                 duration_ms_for_one_step_drop) {
-                m_play_ground.MoveActiveShapeOneStepDown();
+                m_game.MoveActiveShapeOneStepDown();
                 time_stamp_since_last_update = std::chrono::system_clock::now();
-                if (m_play_ground.IsGameOver()) {
+                if (m_game.IsGameOver()) {
                     // Jump to the begin of the loop to avoid clearing the
                     // window in the following steps
                     continue;
                 }
             }
 
-            m_play_ground.ProcessLockDown();
+            m_game.ProcessLockDown();
 
             // Clear screen
             window.clear(sf::Color::White);
 
             // draw playground
-            window.draw(m_play_ground);
+            window.draw(m_game);
 
             // Update the window
             window.display();
-        } else if (m_play_ground.IsGameOver() &&
-                   !m_play_ground.IsGameOverAlreadyAnnounced()) {
-            window.draw(m_play_ground);
+        } else if (m_game.IsGameOver() &&
+                   !m_game.IsGameOverAlreadyAnnounced()) {
+            window.draw(m_game);
             window.display();
-            m_play_ground.SetGameOverAnnounced();
+            m_game.SetGameOverAnnounced();
         }
     }
 }

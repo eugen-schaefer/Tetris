@@ -10,16 +10,48 @@
 #include "GridLogic.h"
 #include "TetrominoGraphic.h"
 
+/// The game class provides all necessities to start a game. Concrete, it
+/// constructs the Tetris grid, a dashboard, and all tetrominoes falling from
+/// top to bottom.
 class Game : public sf::Drawable {
    public:
+    /// Creates a drawable grid object, a drawable dashboard, sets up the
+    /// game over / new game text message, and starts a new game.
+    /// \param number_grid_rows: number of rows in the game grid.
+    /// \param number_grid_columns: number of columns in the game grid.
+    /// \param window: Reference to a window which serves as a target
+    ///                for 2D drawing.
+    /// \param font: font for all sf::Text instances in the entire application.
     Game(int number_grid_rows, int number_grid_columns,
          const sf::RenderWindow& window, sf::Font& font);
-    void ProcessKeyEvents(sf::Event event);
+
+    /// Processes an event from the keyboard
+    /// \param event: event being processed
+    void ProcessKeyEvent(sf::Event event);
+
+    /// Processes a lock-down-state. A lock-down-state is achieved when the next
+    /// tetromino shape cannot be placed on the grid anymore because the grid is
+    /// already full of shapes.
     void ProcessLockDown();
+
+    /// Moves the active shape one step downwards. The method sets also the
+    /// corresponding flag when the game is over.
     void MoveActiveShapeOneStepDown();
+
+    /// Starts a new game by resetting all current states like scoring, list of
+    /// locked shapes etc.
     void StartNewGame();
+
+    /// Retrieves the information whether the game is over or not.
     bool IsGameOver() { return m_is_game_over; };
+
+    /// In case the game is over, retrieves the information about whether this
+    /// fact has been already announced. This information is then utilized in
+    /// the controller class to draw the very last game state only once after
+    /// the game window has been cleared in the controller cycle.
     bool IsGameOverAlreadyAnnounced() { return m_is_game_over_announced; };
+
+    /// Sets the game-over-announcement flag to true.
     void SetGameOverAnnounced() { m_is_game_over_announced = true; };
 
    private:
