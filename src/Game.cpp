@@ -1,4 +1,4 @@
-#include "PlayGround.h"
+#include "Game.h"
 
 #include <SFML/Graphics.hpp>
 #include <algorithm>
@@ -61,8 +61,8 @@ class RandomShapeFactory {
     }
 };
 
-PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
-                       const sf::RenderWindow& window, sf::Font& font)
+Game::Game(int number_grid_rows, int number_grid_columns,
+           const sf::RenderWindow& window, sf::Font& font)
     : m_number_grid_rows{number_grid_rows},
       m_number_grid_columns{number_grid_columns},
       m_is_game_over{false},
@@ -136,7 +136,7 @@ PlayGround::PlayGround(int number_grid_rows, int number_grid_columns,
     StartNewGame();
 }
 
-void PlayGround::ProcessKeyEvents(sf::Event event) {
+void Game::ProcessKeyEvents(sf::Event event) {
     if (m_active_shape) {
         // process keyboard event for the active shape
         if ((event.type == sf::Event::KeyPressed) &&
@@ -165,7 +165,7 @@ void PlayGround::ProcessKeyEvents(sf::Event event) {
     }
 }
 
-void PlayGround::ProcessLockDown() {
+void Game::ProcessLockDown() {
     if (m_active_shape) {
         // In case the active shape is frozen because it reached the lowest
         // possible level on the grid, put it into m_frozen_shapes_on_grid. Then
@@ -301,7 +301,7 @@ void PlayGround::ProcessLockDown() {
     }
 }
 
-void PlayGround::MoveActiveShapeOneStepDown() {
+void Game::MoveActiveShapeOneStepDown() {
     if (m_active_shape) {
         bool is_movement_succeed{m_active_shape->MoveOneStep(Direction::down)};
         if (!is_movement_succeed && (m_active_shape->GetHighestRow() == 0)) {
@@ -310,7 +310,7 @@ void PlayGround::MoveActiveShapeOneStepDown() {
     }
 }
 
-void PlayGround::StartNewGame() {
+void Game::StartNewGame() {
     // Reset the state of current game
     m_is_game_over = false;
     m_is_game_over_announced = false;
@@ -341,7 +341,7 @@ void PlayGround::StartNewGame() {
         m_shapes_in_queue.at(2)->GetTetrominoType());
 }
 
-void PlayGround::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     if (m_is_game_over) {
         target.draw(m_game_over_text, states);
         target.draw(m_start_new_game_text, states);

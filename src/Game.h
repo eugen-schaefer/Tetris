@@ -1,5 +1,5 @@
-#ifndef PLAY_GROUND_H_
-#define PLAY_GROUND_H_
+#ifndef GAME_H_
+#define GAME_H_
 
 #include <deque>
 #include <memory>
@@ -10,10 +10,10 @@
 #include "GridLogic.h"
 #include "TetrominoGraphic.h"
 
-class PlayGround : public sf::Drawable {
+class Game : public sf::Drawable {
    public:
-    PlayGround(int number_grid_rows, int number_grid_columns,
-               const sf::RenderWindow& window, sf::Font& font);
+    Game(int number_grid_rows, int number_grid_columns,
+         const sf::RenderWindow& window, sf::Font& font);
     void ProcessKeyEvents(sf::Event event);
     void ProcessLockDown();
     void MoveActiveShapeOneStepDown();
@@ -37,4 +37,4 @@ class PlayGround : public sf::Drawable {
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
 
-#endif /* PLAY_GROUND_H_ */
+#endif /* GAME_H_ */

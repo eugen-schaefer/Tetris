@@ -6,7 +6,7 @@
 #include "GridGraphic.h"
 
 Controller::Controller(sf::RenderWindow& window, sf::Font& font)
-    : m_play_ground{PlayGround(m_number_rows, m_number_columns, window, font)} {
+    : m_play_ground{Game(m_number_rows, m_number_columns, window, font)} {
     // Center the main window
     auto desktop = sf::VideoMode::getDesktopMode();
     sf::Vector2<int> new_position{
