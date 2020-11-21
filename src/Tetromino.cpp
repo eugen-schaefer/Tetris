@@ -55,7 +55,7 @@ bool Tetromino::MoveOneStep(Direction direction) {
         // TODO(Eugen): Consider waiting a short period of time (e.g. 1 second)
         // before locking. This waiting time would allow to horizontally move
         // the shape at the lowest possible level for the specified amount of
-        // time before is is frozen forever.
+        // time before is is locked down forever.
         LockDown();
         is_movement_succeed = false;
     }

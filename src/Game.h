@@ -17,11 +17,11 @@ class Game : public sf::Drawable {
    public:
     /// Creates a drawable grid object, a drawable dashboard, sets up the
     /// game over / new game text message, and starts a new game.
-    /// \param number_grid_rows: number of rows in the game grid.
-    /// \param number_grid_columns: number of columns in the game grid.
+    /// \param number_grid_rows: Number of rows in the game grid.
+    /// \param number_grid_columns: Number of columns in the game grid.
     /// \param window: Reference to a window which serves as a target
     ///                for 2D drawing.
-    /// \param font: font for all sf::Text instances in the entire application.
+    /// \param font: Font for all sf::Text instances in the entire application.
     Game(int number_grid_rows, int number_grid_columns,
          const sf::RenderWindow& window, sf::Font& font);
 
@@ -62,7 +62,7 @@ class Game : public sf::Drawable {
     GridLogic m_grid_logic;
     GridGraphic m_grid_graphic;
     std::deque<std::unique_ptr<TetrominoGraphic>> m_shapes_in_queue;
-    std::vector<std::unique_ptr<TetrominoGraphic>> m_frozen_shapes_on_grid;
+    std::vector<std::unique_ptr<TetrominoGraphic>> m_locked_shapes_on_grid;
     std::unique_ptr<TetrominoGraphic> m_active_shape;
     Dashboard m_dashboard;
 

@@ -167,13 +167,13 @@ void Game::ProcessKeyEvent(sf::Event event) {
 
 void Game::ProcessLockDown() {
     if (m_active_shape) {
-        // In case the active shape is frozen because it reached the lowest
-        // possible level on the grid, put it into m_frozen_shapes_on_grid. Then
+        // In case the active shape is locked down because it reached the lowest
+        // possible level on the grid, put it into m_locked_shapes_on_grid. Then
         // generate a new shape and put it in front of m_shapes_in_queue and pop
         // a shape from the back of the m_shapes_in_queue. Finally, check
         // occupancy grid for entirely occupied rows and clear them all if any.
         if (m_active_shape->IsLocked()) {
-            m_frozen_shapes_on_grid.push_back(std::move(m_active_shape));
+            m_locked_shapes_on_grid.push_back(std::move(m_active_shape));
             m_active_shape = std::move(m_shapes_in_queue.back());
             m_shapes_in_queue.pop_back();
             m_shapes_in_queue.push_front(std::move(
@@ -192,9 +192,9 @@ void Game::ProcessLockDown() {
                 for (const int occupied_row_index :
                      vector_of_indexes_of_fully_occupied_rows) {
                     for (auto graphical_shape_iterator =
-                             m_frozen_shapes_on_grid.begin();
+                             m_locked_shapes_on_grid.begin();
                          graphical_shape_iterator !=
-                         m_frozen_shapes_on_grid.end();) {
+                         m_locked_shapes_on_grid.end();) {
                         auto logical_chape_iterator =
                             (*graphical_shape_iterator)
                                 ->GetIteratorToBeginOfLogicalTetromino();
@@ -217,7 +217,7 @@ void Game::ProcessLockDown() {
                         }
                         if ((*graphical_shape_iterator)->GetSquares().empty()) {
                             graphical_shape_iterator =
-                                m_frozen_shapes_on_grid.erase(
+                                m_locked_shapes_on_grid.erase(
                                     graphical_shape_iterator);
                         } else {
                             ++graphical_shape_iterator;
@@ -230,7 +230,7 @@ void Game::ProcessLockDown() {
 
                 // Unlock the movability of each tetromino on the grid, move
                 // each one down until it hits an obstacle and lock it again
-                for (auto& shape : m_frozen_shapes_on_grid) {
+                for (auto& shape : m_locked_shapes_on_grid) {
                     shape->Release();
                     while (shape->MoveOneStep(Direction::down)) {
                     }
@@ -316,7 +316,7 @@ void Game::StartNewGame() {
     m_is_game_over_announced = false;
     m_grid_logic.FreeEntireGrid();
     m_shapes_in_queue.clear();
-    m_frozen_shapes_on_grid.clear();
+    m_locked_shapes_on_grid.clear();
     m_active_shape = nullptr;
     m_dashboard.Reset();
 
@@ -349,8 +349,8 @@ void Game::draw(sf::RenderTarget& target, sf::RenderStates states) const {
         if (m_active_shape) {
             target.draw(*m_active_shape, states);
         }
-        if (!m_frozen_shapes_on_grid.empty()) {
-            for (const auto& graphical_shape : m_frozen_shapes_on_grid) {
+        if (!m_locked_shapes_on_grid.empty()) {
+            for (const auto& graphical_shape : m_locked_shapes_on_grid) {
                 target.draw(*graphical_shape);
             }
         }
