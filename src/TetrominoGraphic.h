@@ -9,9 +9,11 @@
 
 using GraphicalSquaresIteratorType = std::vector<sf::RectangleShape>::iterator;
 
-/// TetrominoGraphic class draws a concrete tetromino shape on the screen. Its
-/// size and position is relative to the associated grid in which the shape is
-/// beeing drawn.
+/// The dashboard provides information to the player about the current game's
+/// state. It shows the queue of the upcoming shapes being drawn as the next
+/// elements after the currently active shape is locked down. It also informs
+/// the player about the scoring and how many lines have been cleared since the
+/// game start.
 class TetrominoGraphic : public sf::Drawable {
    public:
     /// Constructs a concrete tetromino shape out of four adjacent squares as a

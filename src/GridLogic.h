@@ -51,15 +51,15 @@ class GridLogic : public IGridLogic {
     void FreeEntireGrid();
 
    private:
-    int m_number_columns;
-    int m_number_rows;
+    int m_number_columns{};
+    int m_number_rows{};
 
     // vector containing the indexes of entirely occupied rows in
     // m_occupancy_grid in the order from bottom to top, i.e.
     // m_indexes_of_fully_occupied_rows[0] corresponds to the lowest entirely
     // occupied row whereas m_indexes_of_fully_occupied_rows[size-1] corresponds
     // to the most top entirely occupied row
-    std::vector<int> m_indexes_of_fully_occupied_rows;
+    std::vector<int> m_indexes_of_fully_occupied_rows{};
 
     // The grid is rectangular, i.e. it consists of m x n cells, where m is the
     // number of rows and n is the number of columns. Columns are numbered from

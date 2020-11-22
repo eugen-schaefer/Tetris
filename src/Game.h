@@ -10,9 +10,17 @@
 #include "GridLogic.h"
 #include "TetrominoGraphic.h"
 
-/// The game class provides all necessities to start a game. Concrete, it
+/// The Game class provides all necessities to start a game. Concrete, it
 /// constructs the Tetris grid, a dashboard, and all tetrominoes falling from
-/// top to bottom.
+/// top to bottom. Tetrominoes are organized in the following way: Once a
+/// tetromino shape is randomly generated, it is pushed into a waiting queue
+/// containing three tetrominoes in total. Then one tetromino is poped from
+/// another end of the queue and referred to as an active shape. The player can
+/// relocate and rotate this active shape as long as it is not locked down. When
+/// the active shape has reached the lowest possible free line on the grid, it
+/// is then locked down and pushed into another container that contains all the
+/// locked shapes. Furthermore, the Game class offers methods to process
+/// keyboard events, shapes lock down and to restart the game.
 class Game : public sf::Drawable {
    public:
     /// Creates a drawable grid object, a drawable dashboard, sets up the
